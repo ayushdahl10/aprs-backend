@@ -3,6 +3,7 @@ from helpers.models.base_model import BaseModel
 
 
 class Staff(BaseModel):
+    IID_PREFIX_KEY="sff"
     user = models.OneToOneField(
         "autho.UserDetail", on_delete=models.PROTECT, null=False
     )
