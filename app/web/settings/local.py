@@ -1,0 +1,31 @@
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+DEBUG = True
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "webdb",
+        "USER": "superuser",
+        "PASSWORD": "admin_admin",
+        "HOST": "db",
+        "PORT": "5432",
+    }
+}
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:4566",
+    "https://localhost:4566",
+]
+
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "staticfiles"),)
+
+
+SYSTEM_USERNAME = "system-user"

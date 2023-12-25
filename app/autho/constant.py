@@ -1,0 +1,25 @@
+from django.db.models import TextChoices
+from django.utils.translation import gettext_lazy as _
+
+WEBSITE_GROUP_NAME = "RegisteredUser"
+STAFF = "Staff"
+ADMIN = "Admin"
+
+
+class UserStatusChoices(TextChoices):
+    ACTIVE = (
+        "active",
+        _("Active"),
+    )
+    SUSPENDED = (
+        "suspended",
+        _("Suspended"),
+    )
+    BANNED = "banned", _("Banned")
+
+
+class UserTypeChoices(TextChoices):
+    OWNER = ("owner", _("Owner"))
+    TENANT = ("tenant", _("Tenant"))
+    STAFF = ("staff", _("Staff"))
+    CUSTOMER = ("customer", _("Customer"))
