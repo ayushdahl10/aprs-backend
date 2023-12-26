@@ -46,6 +46,29 @@ class AttendanceRequest(BaseModel):
         return f"{self.staff}"
 
 
+class LeaveRequest(BaseModel):
+    IID_PREFIX_KEY = WEBSITE_IID_STAFF_LOG
+    staff = models.ForeignKey(
+        "autho.Staff",
+        on_delete=models.CASCADE,
+        null=True,
+        related_name="leave_requests_staff",
+    )
+    assigned_to = models.ManyToManyField(
+        "autho.Staff",
+        related_name="leave_requests_assigned_to",
+    )
+    start_datetime = models.DateTimeField()
+    end_datetime = models.DateTimeField()
+    reason = models.TextField(max_length=500, null=False, blank=True, default="")
+
+    class Meta:
+        verbose_name = "Leave Request"
+
+    def __str__(self):
+        return f"{self.staff}"
+
+
 class StaffActivityLogs(BaseModel):
     IID_PREFIX_KEY = WEBSITE_IID_ATTEN_LOG
     staff = models.ForeignKey("autho.Staff", on_delete=models.CASCADE, null=True)
