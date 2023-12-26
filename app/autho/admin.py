@@ -46,9 +46,22 @@ class StaffActivityLogAdmin(AdminBaseModel):
 
 @admin.register(AttendanceRequest)
 class AttendanceRequestAdmin(AdminBaseModel):
-    list_display = ["iid", "staff", "reason", "request_type"]
+    list_display = [
+        "iid",
+        "staff",
+        "reason",
+        "request_type",
+        "is_approved",
+    ]
 
 
 @admin.register(LeaveRequest)
 class AttendanceRequestAdmin(AdminBaseModel):
-    list_display = ["iid", "staff", "reason", "start_datetime", "end_datetime"]
+    list_display = [
+        "iid",
+        "staff",
+        "reason",
+        "start_datetime",
+        "end_datetime",
+        "is_approved",
+    ]

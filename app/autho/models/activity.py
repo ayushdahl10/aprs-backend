@@ -42,6 +42,7 @@ class AttendanceRequest(BaseModel):
     date = models.DateField()
     time = models.TimeField()
     reason = models.TextField(max_length=500, null=False, blank=True, default="")
+    is_approved = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Attendance Request"
@@ -65,7 +66,8 @@ class LeaveRequest(BaseModel):
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
     reason = models.TextField(max_length=500, null=False, blank=True, default="")
-    
+    is_approved = models.BooleanField(default=False)
+
     class Meta:
         verbose_name = "Leave Request"
 
