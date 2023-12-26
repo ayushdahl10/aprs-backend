@@ -1,9 +1,11 @@
-from rest_framework import serializers
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from autho.models import UserActivityLog, Staff
+
+from autho.models import Staff
 from website.models import Department
+from website.serializer import DepartmentListSerializer
 
 
 class RegisterUserSerializer(serializers.ModelSerializer):
@@ -94,8 +96,9 @@ class CreateStaffSerializer(serializers.ModelSerializer):
     staff_id = serializers.CharField(required=True)
     department = serializers.SlugRelatedField(
         slug_field="iid",
-        queryset=Department.objects.filter(is_active=True,is_deleted=False),
-        required=True
+        queryset=Department.objects.filter(is_active=True, is_deleted=False),
+        required=True,
+        many=True,
     )
 
     class Meta:
@@ -113,11 +116,13 @@ class CreateStaffSerializer(serializers.ModelSerializer):
 
 
 class ListStaffSerializer(serializers.ModelSerializer):
-    email=serializers.CharField(source="user.user.email",read_only=True)
-    first_name=serializers.CharField(source="user.user.first_name",read_only=True)
-    last_name=serializers.CharField(source="user.user.last_name",read_only=True)
-    number=serializers.CharField(source="user.number",read_only=True)
-    address=serializers.CharField(source="user.address",read_only=True)
+    email = serializers.CharField(source="user.user.email", read_only=True)
+    first_name = serializers.CharField(source="user.user.first_name", read_only=True)
+    last_name = serializers.CharField(source="user.user.last_name", read_only=True)
+    number = serializers.CharField(source="user.number", read_only=True)
+    address = serializers.CharField(source="user.address", read_only=True)
+    department = DepartmentListSerializer(many=True)
+
     class Meta:
         model = Staff
         fields = [
@@ -132,5 +137,5 @@ class ListStaffSerializer(serializers.ModelSerializer):
             "working_hours",
             "position",
             "staff_id",
+            "department",
         ]
-    
