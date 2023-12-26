@@ -1,6 +1,6 @@
 from helpers.super_viewset import SuperViewset
 from autho.models import Staff
-from autho.serializers import CreateStaffSerializer, RegisterUserSerializer
+from autho.serializers import CreateStaffSerializer, RegisterUserSerializer,ListStaffSerializer
 from autho.models import User, UserDetail, Group
 from rest_framework.response import Response
 from autho.constant import (
@@ -15,6 +15,7 @@ from autho.constant import UserTypeChoices
 class StaffAPI(SuperViewset):
     queryset = Staff.objects.filter()
     create_update_serializer = CreateStaffSerializer
+    list_serializer=ListStaffSerializer
 
     def create(self, request, *args, **kwargs):
         user_detail = self.request.data["user_detail"]
@@ -59,3 +60,5 @@ class StaffAPI(SuperViewset):
             staff_serializer.is_valid(raise_exception=True)
             staff_serializer.save()
         return self.on_api_success_response("Staff created successfully", status=201)
+
+

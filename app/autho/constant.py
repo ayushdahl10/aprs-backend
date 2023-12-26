@@ -23,3 +23,4 @@ class UserTypeChoices(TextChoices):
     TENANT = ("tenant", _("Tenant"))
     STAFF = ("staff", _("Staff"))
     CUSTOMER = ("customer", _("Customer"))
+    ADMIN=("admin",_("Admin"))
