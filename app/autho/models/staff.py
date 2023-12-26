@@ -1,9 +1,10 @@
 from django.db import models
 from helpers.models.base_model import BaseModel
+from helpers.mixins.constant import WEBSITE_IID_STAFF,WEBSITE_IID_STAFF_LOG
 
 
 class Staff(BaseModel):
-    IID_PREFIX_KEY="sff"
+    IID_PREFIX_KEY=WEBSITE_IID_STAFF
     user = models.OneToOneField(
         "autho.UserDetail", on_delete=models.PROTECT, null=False
     )
@@ -22,3 +23,11 @@ class Staff(BaseModel):
 
     def delete(self, force=True, *args, **kwargs):
         return super().delete(force, *args, **kwargs)
+
+
+
+class StaffLogs(BaseModel):
+    IID_PREFIX_KEY=WEBSITE_IID_STAFF_LOG
+    check_in=models.DateTimeField()
+    check_out=models.DateTimeField()
+    exceed_time=models.CharField(max_length=125,null=True,blank=True)

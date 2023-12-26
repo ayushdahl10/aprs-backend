@@ -6,9 +6,9 @@ from autho.constant import UserStatusChoices, UserTypeChoices
 
 class UserDetail(models.Model):
     user = models.OneToOneField(User, on_delete=models.PROTECT)
-    full_name = models.CharField(max_length=500, null=False, blank=True, default="")
+    full_name = models.CharField(max_length=500, null=True, blank=True, default="")
     number = models.CharField(max_length=15, null=False, blank=True)
-    address = models.CharField(max_length=126, null=False, blank=True)
+    address = models.CharField(max_length=126, null=True, blank=True)
     dob = models.DateField(null=True, help_text="Enter date of birth")
     user_status = models.CharField(
         choices=UserStatusChoices.choices, default=UserStatusChoices.ACTIVE

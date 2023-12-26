@@ -103,3 +103,20 @@ class CreateStaffSerializer(serializers.ModelSerializer):
             "position",
             "staff_id",
         ]
+
+
+class ListStaffSerializer(serializers.ModelSerializer):
+    email=serializers.CharField(source="user.user.email",read_only=True)
+
+    class Meta:
+        model = Staff
+        fields = [
+            "email",
+            "joined_date",
+            "shift_start",
+            "shift_end",
+            "working_hours",
+            "position",
+            "staff_id",
+        ]
+    
