@@ -1,5 +1,4 @@
 from django.db import models
-from autho.models import UserDetail
 
 
 class UserActivityLog(models.Model):

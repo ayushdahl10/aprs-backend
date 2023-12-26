@@ -1,24 +1,22 @@
-from rest_framework import generics
-from autho.models import User, UserDetail, Group
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.response import Response
-from django.http import Http404
+from django.contrib.auth.models import User, Group
 from django.db import transaction
-from django.db.models import Q
-from helpers.mixins.api_mixins import APIMixin
-
+from django.http import Http404
+from rest_framework import generics
+from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
 
 from autho.constant import (
     WEBSITE_GROUP_NAME,
 )
-
+from autho.models import UserDetail
 from autho.serializers import (
     RegisterUserSerializer,
     LoginSerializer,
     UserDetailSerializer,
 )
-from rest_framework import status
+from helpers.mixins.api_mixins import APIMixin
 from helpers.mixins.helper import generate_random_string
 
 

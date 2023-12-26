@@ -1,5 +1,13 @@
 from django.contrib import admin
-from autho.models import UserDetail, UserActivityLog, Staff,StaffLogs
+
+from autho.models import (
+    UserDetail,
+    UserActivityLog,
+    Staff,
+    Attendance,
+    StaffActivityLogs,
+    AttendanceRequest,
+)
 from helpers.models.baseadmin_model import AdminBaseModel
 
 
@@ -25,6 +33,16 @@ class StaffAdmin(AdminBaseModel):
     list_display = ["iid", "staff_id", "user", "is_active"]
 
 
-@admin.register(StaffLogs)
+@admin.register(Attendance)
 class StaffLogsAdmin(AdminBaseModel):
-    list_display = ["iid","staff","check_in","check_out","is_deleted"]
+    list_display = ["iid", "staff", "check_in", "check_out", "is_approved"]
+
+
+@admin.register(StaffActivityLogs)
+class StaffActivityLogAdmin(AdminBaseModel):
+    list_display = ["iid", "staff", "created_at"]
+
+
+@admin.register(AttendanceRequest)
+class AttendanceRequestAdmin(AdminBaseModel):
+    list_display = ["iid", "staff", "reason", "request_type"]

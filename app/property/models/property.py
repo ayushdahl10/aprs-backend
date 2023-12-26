@@ -1,7 +1,8 @@
-from helpers.models.base_model import BaseModel
-from autho.models import User
+from django.contrib.auth.models import User
 from django.db import models
+
 from helpers.mixins.constant import WEBSITE_IID_PROPERTY
+from helpers.models.base_model import BaseModel
 
 
 class Property(BaseModel):
