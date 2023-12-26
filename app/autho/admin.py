@@ -7,6 +7,7 @@ from autho.models import (
     Attendance,
     StaffActivityLogs,
     AttendanceRequest,
+    LeaveRequest,
 )
 from helpers.models.baseadmin_model import AdminBaseModel
 
@@ -46,3 +47,8 @@ class StaffActivityLogAdmin(AdminBaseModel):
 @admin.register(AttendanceRequest)
 class AttendanceRequestAdmin(AdminBaseModel):
     list_display = ["iid", "staff", "reason", "request_type"]
+
+
+@admin.register(LeaveRequest)
+class AttendanceRequestAdmin(AdminBaseModel):
+    list_display = ["iid", "staff", "reason", "start_datetime", "end_datetime"]

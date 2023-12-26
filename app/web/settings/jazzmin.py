@@ -72,11 +72,11 @@ JAZZMIN_SETTINGS = {
         "property.Property",
         "property.Tenant",
         "property.LeaseInformation",
-        "autho.UserDetail",
         "autho.UserActivityLog",
+        "autho.StaffActivityLog",
+        "autho.UserDetail",
         "autho.Staff",
         "autho.Attendance",
-        "autho.StaffActivityLog",
     ],
     # Custom links to append to app groups, keyed on app name
     "custom_links": {
@@ -110,6 +110,7 @@ JAZZMIN_SETTINGS = {
         "website.Department": "fa fa-briefcase",
         "autho.StaffActivityLogs": "fa fa-exclamation",
         "autho.AttendanceRequest": "fa fa-check",
+        "autho.LeaveRequest": "fa fa-plane",
     },
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
