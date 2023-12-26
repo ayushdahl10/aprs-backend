@@ -28,6 +28,10 @@ class Staff(BaseModel):
 
 class StaffLogs(BaseModel):
     IID_PREFIX_KEY=WEBSITE_IID_STAFF_LOG
+    staff=models.ForeignKey("autho.Staff",on_delete=models.CASCADE,null=True)
     check_in=models.DateTimeField()
     check_out=models.DateTimeField()
-    exceed_time=models.CharField(max_length=125,null=True,blank=True)
+
+
+
+
