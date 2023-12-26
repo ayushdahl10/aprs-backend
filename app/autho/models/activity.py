@@ -1,7 +1,11 @@
 from django.db import models
 
 from autho.constant import AttendanceRequestType
-from helpers.mixins.constant import WEBSITE_IID_STAFF_LOG, WEBSITE_IID_ATTEN_LOG
+from helpers.mixins.constant import (
+    WEBSITE_IID_STAFF_LOG,
+    WEBSITE_IID_ATTEN_LOG,
+    WEBSITE_IID_LEAVE_LOG,
+)
 from helpers.models.base_model import BaseModel
 
 
@@ -47,7 +51,7 @@ class AttendanceRequest(BaseModel):
 
 
 class LeaveRequest(BaseModel):
-    IID_PREFIX_KEY = WEBSITE_IID_STAFF_LOG
+    IID_PREFIX_KEY = WEBSITE_IID_LEAVE_LOG
     staff = models.ForeignKey(
         "autho.Staff",
         on_delete=models.CASCADE,
@@ -61,7 +65,7 @@ class LeaveRequest(BaseModel):
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
     reason = models.TextField(max_length=500, null=False, blank=True, default="")
-
+    
     class Meta:
         verbose_name = "Leave Request"
 
