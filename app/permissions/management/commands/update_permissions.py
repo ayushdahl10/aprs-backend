@@ -1,22 +1,9 @@
-from django.core.management import BaseCommand
 from django.db import transaction
+from django.core.management import BaseCommand
+from permissions.models import Role, Permission
 
-from permissions.managepermission.map_permission import (
-    GET_ALL_PERMISSION,
-)
-from permissions.constant import PRIMARY_ROLES
-from permissions.models import Permission
-
-
-@transaction.atomic
-def create_api_permission():
-    Permission.objects.all().delete()
-    for permissions in GET_ALL_PERMISSION:
-        for permission in permissions:
-            permissions = Permission.objects.get_or_create(
-                url_name=permission[0], url_type=permission[1]
-            )
-    print(f"permission added and updated successfully")
+from permissions.managepermission.users_permissions import STAFF_API
+from permissions.constant import REGISTER_USER, ANONYMOUS_USER, ADMIN_USER,SUPER_ADMIN
 
 
 class Command(BaseCommand):
@@ -24,7 +11,26 @@ class Command(BaseCommand):
     load builtin roles
     """
 
-    help = "load builtin roles"
+    help = "update roles permissions"
 
     def handle(self, **options):
-        create_api_permission()
+        with transaction.atomic():
+            update_user_roles(ADMIN_USER, [STAFF_API])
+            update_user_roles(SUPER_ADMIN,[STAFF_API])
+        print(f"role permissions updated successfully")
+
+
+def update_user_roles(role_name, permission_name):
+    allowed_permissions = permission_name
+    try:
+        role = Role.objects.get(name=role_name)
+        role.permissions.clear()
+    except Role.DoesNotExist:
+        print(f"Role does not exists please load build in roles")
+    for permission in allowed_permissions:
+        for value in permission:
+            prefix = value[0]
+            type = value[1]
+            permissions = Permission.objects.get(url_name=prefix, url_type=type)
+            role.permissions.add(permissions)
+    role.save()
