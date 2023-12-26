@@ -72,6 +72,10 @@ JAZZMIN_SETTINGS = {
         "property.Property",
         "property.Tenant",
         "property.LeaseInformation",
+        "autho.UserDetail",
+        "autho.Staff",
+        "autho.UserActivityLog",
+        "autho.StaffLogs",
     ],
     # Custom links to append to app groups, keyed on app name
     "custom_links": {

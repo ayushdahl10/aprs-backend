@@ -1,10 +1,12 @@
 from django.db import models
 
-from helpers.models.base_model import BaseModel
 from helpers.mixins.constant import (
     WEBSITE_IID_ADVANCE_SETTING,
     WEBSITE_IID_COMPANY_DETAIL,
+    WEBSITE_IID_DEPARTMENT,
 )
+from helpers.models.base_model import BaseModel
+
 
 # Create your models here.
 
@@ -47,3 +49,19 @@ class Config(BaseModel):
 
     class Meta:
         verbose_name = "Config"
+
+
+class Department(BaseModel):
+    IID_PREFIX_KEY = WEBSITE_IID_DEPARTMENT
+    name = models.CharField(
+        max_length=256,
+        null=False,
+        blank=True,
+        unique=True,
+        help_text="Enter your department name",
+    )
+    description = models.TextField(max_length=500, null=True, blank=True)
+    contact_info = models.TextField(max_length=500, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.name}"
