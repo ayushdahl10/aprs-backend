@@ -14,6 +14,7 @@ class Staff(BaseModel):
     shift_end = models.TimeField()
     working_hours = models.DecimalField(max_digits=10, decimal_places=2)
     position = models.CharField(max_length=256, null=False, blank=True)
+    department=models.ManyToManyField("website.Department")
 
     def __str__(self) -> str:
         return f"{self.staff_id} => {self.user.user.email}"
@@ -32,6 +33,8 @@ class StaffLogs(BaseModel):
     check_in=models.DateTimeField()
     check_out=models.DateTimeField()
 
+    class Meta:
+        verbose_name="Attendance Log"
 
 
 

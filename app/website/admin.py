@@ -3,6 +3,7 @@ from helpers.models.baseadmin_model import AdminBaseModel
 from website.models import (
     Company,
     Config,
+Department,
 )
 
 
@@ -19,3 +20,7 @@ class CompanyDetailAdmin(AdminBaseModel):
 @admin.register(Config)
 class AdvanceSettingAdmin(AdminBaseModel):
     list_display = ["key", "value", "config", "is_active", "created_by"]
+
+@admin.register(Department)
+class DepartmentAdmin(AdminBaseModel):
+    list_display = ["iid","name","description","is_active"]

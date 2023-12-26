@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from autho.models import UserActivityLog, Staff
+from website.models import Department
 
 
 class RegisterUserSerializer(serializers.ModelSerializer):
@@ -91,6 +92,11 @@ class CreateStaffSerializer(serializers.ModelSerializer):
     position = serializers.CharField(required=True)
     working_hours = serializers.CharField(required=True)
     staff_id = serializers.CharField(required=True)
+    department = serializers.SlugRelatedField(
+        slug_field="iid",
+        queryset=Department.objects.filter(is_active=True,is_deleted=False),
+        required=True
+    )
 
     class Meta:
         model = Staff
@@ -102,16 +108,24 @@ class CreateStaffSerializer(serializers.ModelSerializer):
             "working_hours",
             "position",
             "staff_id",
+            "department",
         ]
 
 
 class ListStaffSerializer(serializers.ModelSerializer):
     email=serializers.CharField(source="user.user.email",read_only=True)
-
+    first_name=serializers.CharField(source="user.user.first_name",read_only=True)
+    last_name=serializers.CharField(source="user.user.last_name",read_only=True)
+    number=serializers.CharField(source="user.number",read_only=True)
+    address=serializers.CharField(source="user.address",read_only=True)
     class Meta:
         model = Staff
         fields = [
             "email",
+            "first_name",
+            "last_name",
+            "number",
+            "address",
             "joined_date",
             "shift_start",
             "shift_end",
