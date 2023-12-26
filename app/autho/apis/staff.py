@@ -1,21 +1,26 @@
-from helpers.super_viewset import SuperViewset
-from autho.models import Staff
-from autho.serializers import CreateStaffSerializer, RegisterUserSerializer,ListStaffSerializer
-from autho.models import User, UserDetail, Group
+from django.contrib.auth.models import User, Group
+from django.db import transaction
 from rest_framework.response import Response
+
 from autho.constant import (
     ADMIN,
 )
-from helpers.mixins.helper import generate_random_string
-from django.db import transaction
-from rest_framework.permissions import AllowAny
 from autho.constant import UserTypeChoices
+from autho.models import Staff
+from autho.models import UserDetail
+from autho.serializers import (
+    CreateStaffSerializer,
+    RegisterUserSerializer,
+    ListStaffSerializer,
+)
+from helpers.mixins.helper import generate_random_string
+from helpers.super_viewset import SuperViewset
 
 
 class StaffAPI(SuperViewset):
     queryset = Staff.objects.filter()
     create_update_serializer = CreateStaffSerializer
-    list_serializer=ListStaffSerializer
+    list_serializer = ListStaffSerializer
 
     def create(self, request, *args, **kwargs):
         user_detail = self.request.data["user_detail"]
@@ -60,5 +65,3 @@ class StaffAPI(SuperViewset):
             staff_serializer.is_valid(raise_exception=True)
             staff_serializer.save()
         return self.on_api_success_response("Staff created successfully", status=201)
-
-

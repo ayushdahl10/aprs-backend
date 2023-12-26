@@ -1,7 +1,8 @@
-from django.contrib.auth.models import User, Group, UserManager
-from autho.manager.manager import BaseAuthManager
+from django.contrib.auth.models import User
 from django.db import models
+
 from autho.constant import UserStatusChoices, UserTypeChoices
+from autho.manager.manager import BaseAuthManager
 
 
 class UserDetail(models.Model):

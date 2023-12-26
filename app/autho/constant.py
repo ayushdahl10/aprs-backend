@@ -23,4 +23,9 @@ class UserTypeChoices(TextChoices):
     TENANT = ("tenant", _("Tenant"))
     STAFF = ("staff", _("Staff"))
     CUSTOMER = ("customer", _("Customer"))
-    ADMIN=("admin",_("Admin"))
+    ADMIN = ("admin", _("Admin"))
+
+
+class AttendanceRequestType(TextChoices):
+    CHECK_IN = ("in", _("Check In"))
+    CHECK_OUT = ("out", _("Check Out"))
