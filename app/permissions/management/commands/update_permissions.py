@@ -2,7 +2,11 @@ from django.core.management import BaseCommand
 from django.db import transaction
 
 from permissions.constant import ADMIN_USER, SUPER_ADMIN
-from permissions.managepermission.users_permissions import STAFF_API, DEPARTMENT_API
+from permissions.managepermission.users_permissions import (
+    STAFF_API,
+    DEPARTMENT_API,
+    ATTENDANCE_API,
+)
 from permissions.models import Role, Permission
 
 
@@ -15,8 +19,8 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         with transaction.atomic():
-            update_user_roles(ADMIN_USER, [STAFF_API, DEPARTMENT_API])
-            update_user_roles(SUPER_ADMIN, [STAFF_API, DEPARTMENT_API])
+            update_user_roles(ADMIN_USER, [STAFF_API, DEPARTMENT_API, ATTENDANCE_API])
+            update_user_roles(SUPER_ADMIN, [STAFF_API, DEPARTMENT_API, ATTENDANCE_API])
         print(f"role permissions updated successfully")
 
 

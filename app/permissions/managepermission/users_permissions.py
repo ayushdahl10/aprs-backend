@@ -11,3 +11,8 @@ DEPARTMENT_API = [
     ("departments-detail", "get"),
     ("departments-detail", "patch"),
 ]
+
+ATTENDANCE_API = [
+    ("atten-list", "get"),
+    ("atten-detail", "get"),
+]

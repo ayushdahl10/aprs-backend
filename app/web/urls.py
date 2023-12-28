@@ -34,6 +34,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("autho.urls")),
     path("api/", include("website.urls")),
+    path("api/", include("activity.urls")),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("api-token-auth/", views.obtain_auth_token),
     path(

@@ -138,7 +138,7 @@ class SuperViewset(
 """base viewset only read operations"""
 
 
-class ReadOnlyViewSet(ReadOnlyModelViewSet, APIMixin):
+class ReadOnlyViewSet(APIMixin, ReadOnlyModelViewSet):
     lookup_field = "iid"
     list_serializer = None
     detail_serializer = None
