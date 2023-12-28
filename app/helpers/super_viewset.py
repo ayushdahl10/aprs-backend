@@ -1,21 +1,52 @@
 from django.db import transaction
 from rest_framework import status
-from rest_framework.viewsets import ModelViewSet
+from rest_framework import viewsets, mixins
+from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from helpers.exceptions import SerializerNotFoundException, NotFoundException
 from helpers.mixins.api_mixins import APIMixin
 from helpers.pagination import CustomPagination
 
+
+class UpdateModelMixin:
+    """
+    Update a model instance.
+    """
+
+    def perform_update(self, serializer):
+        serializer.save()
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, "_prefetched_objects_cache", None):
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+
+
 """base viewset for CRUD operations"""
 
 
-class SuperViewset(APIMixin, ModelViewSet):
+class SuperViewset(
+    APIMixin,
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.DestroyModelMixin,
+    UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
     lookup_field = "iid"
     list_serializer = None
     detail_serializer = None
     create_update_serializer = None
     pagination_class = CustomPagination
+    force_delete: bool = False
 
     def _get_default_serializer_class(self):
         if self.serializer_class:
