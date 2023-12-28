@@ -4,3 +4,10 @@ STAFF_API = [
     ("staffs-detail", "patch"),
     ("satffs-detail", "get"),
 ]
+
+DEPARTMENT_API = [
+    ("departments-list", "get"),
+    ("departments-list", "post"),
+    ("departments-detail", "get"),
+    ("departments-detail", "patch"),
+]

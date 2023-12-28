@@ -49,6 +49,7 @@ class RegisterAPI(generics.CreateAPIView):
                 user.set_password(password)
                 user.save()
                 fields = {
+                    "full_name": first_name + last_name,
                     "user": user,
                     "number": number,
                     "is_email_verified": False,

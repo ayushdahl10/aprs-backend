@@ -1,16 +1,16 @@
-version: '3.8'
+version: "3.8"
 
 services:
   web:
     container_name: crms
     build:
-      context: .  # Points to the project root
+      context: . # Points to the project root
       dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8080
     volumes:
       - ./app/:/usr/src/app/
     ports:
-      - 8000:8000
+      - 8080:8080
     env_file:
       - ./.env
     depends_on:

@@ -114,6 +114,11 @@ class CreateStaffSerializer(serializers.ModelSerializer):
             "department",
         ]
 
+    def validate_staff_id(self, value):
+        if Staff.objects.filter(staff_id=value).exists():
+            raise serializers.ValidationError("Staff with this id already exists")
+        return value
+
 
 class ListStaffSerializer(serializers.ModelSerializer):
     email = serializers.CharField(source="user.user.email", read_only=True)
