@@ -1,6 +1,7 @@
 from django.db import models
 
 from autho.constant import AttendanceRequestType
+from autho.constant import AttendanceStatusType
 from helpers.mixins.constant import (
     WEBSITE_IID_STAFF_LOG,
     WEBSITE_IID_ATTEN_LOG,
@@ -14,7 +15,9 @@ class Attendance(BaseModel):
     staff = models.ForeignKey("autho.Staff", on_delete=models.CASCADE, null=True)
     check_in = models.DateTimeField()
     check_out = models.DateTimeField()
-    is_approved = models.BooleanField(default=False)
+    status = models.CharField(
+        choices=AttendanceStatusType.choices, default=AttendanceStatusType.PENDING
+    )
 
     class Meta:
         verbose_name = "Attendance"
@@ -42,7 +45,9 @@ class AttendanceRequest(BaseModel):
     date = models.DateField()
     time = models.TimeField()
     reason = models.TextField(max_length=500, null=False, blank=True, default="")
-    is_approved = models.BooleanField(default=False)
+    status = models.CharField(
+        choices=AttendanceStatusType.choices, default=AttendanceStatusType.PENDING
+    )
 
     class Meta:
         verbose_name = "Attendance Request"

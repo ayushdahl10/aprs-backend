@@ -36,7 +36,7 @@ class StaffAdmin(AdminBaseModel):
 
 @admin.register(Attendance)
 class StaffLogsAdmin(AdminBaseModel):
-    list_display = ["iid", "staff", "check_in", "check_out", "is_approved"]
+    list_display = ["iid", "staff", "check_in", "check_out", "status"]
 
 
 @admin.register(StaffActivityLogs)
@@ -51,7 +51,7 @@ class AttendanceRequestAdmin(AdminBaseModel):
         "staff",
         "reason",
         "request_type",
-        "is_approved",
+        "status",
     ]
 
 

@@ -29,3 +29,9 @@ class UserTypeChoices(TextChoices):
 class AttendanceRequestType(TextChoices):
     CHECK_IN = ("in", _("Check In"))
     CHECK_OUT = ("out", _("Check Out"))
+
+
+class AttendanceStatusType(TextChoices):
+    REJECTED = ("rejected", _("Rejected"))
+    APPROVED = ("approved", _("Approved"))
+    PENDING = ("pending", _("Pending"))
