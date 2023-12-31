@@ -63,5 +63,5 @@ class AttendanceRequestAdmin(AdminBaseModel):
         "reason",
         "start_datetime",
         "end_datetime",
-        "is_approved",
+        "status",
     ]

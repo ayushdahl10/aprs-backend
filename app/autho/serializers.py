@@ -93,7 +93,6 @@ class CreateStaffSerializer(serializers.ModelSerializer):
     shift_end = serializers.TimeField(required=True, allow_null=False)
     position = serializers.CharField(required=True)
     working_hours = serializers.CharField(required=True)
-    staff_id = serializers.CharField(required=True)
     department = serializers.SlugRelatedField(
         slug_field="iid",
         queryset=Department.objects.filter(is_active=True, is_deleted=False),
@@ -110,32 +109,40 @@ class CreateStaffSerializer(serializers.ModelSerializer):
             "shift_end",
             "working_hours",
             "position",
-            "staff_id",
             "department",
         ]
 
-    def validate_staff_id(self, value):
-        if Staff.objects.filter(staff_id=value).exists():
-            raise serializers.ValidationError("Staff with this id already exists")
-        return value
+    def create(self, validated_data):
+        validated_data["created_by"] = self.context.get("request").user
+        return super().create(validated_data)
 
 
 class ListStaffSerializer(serializers.ModelSerializer):
     email = serializers.CharField(source="user.user.email", read_only=True)
-    first_name = serializers.CharField(source="user.user.first_name", read_only=True)
-    last_name = serializers.CharField(source="user.user.last_name", read_only=True)
-    number = serializers.CharField(source="user.number", read_only=True)
-    address = serializers.CharField(source="user.address", read_only=True)
-    department = DepartmentListSerializer(many=True)
 
     class Meta:
         model = Staff
         fields = [
             "email",
-            "first_name",
-            "last_name",
+            "staff_id",
+            "joined_date",
+            "shift_start",
+            "shift_end",
+            "is_active",
+        ]
+
+
+class DetailStaffSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(source="user.user.email", read_only=True)
+    number = serializers.CharField(source="user.number", read_only=True)
+    department = DepartmentListSerializer(many=True)
+
+    class Meta:
+        model = Staff
+        fields = [
+            "iid",
+            "email",
             "number",
-            "address",
             "joined_date",
             "shift_start",
             "shift_end",
@@ -143,4 +150,5 @@ class ListStaffSerializer(serializers.ModelSerializer):
             "position",
             "staff_id",
             "department",
+            "is_active",
         ]
