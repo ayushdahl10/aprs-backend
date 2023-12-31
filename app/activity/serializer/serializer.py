@@ -15,11 +15,13 @@ class CalenderListSerializer(BaseModelSerializer):
     check_out = serializers.SerializerMethodField(read_only=True)
     hours_worked = serializers.SerializerMethodField(read_only=True)
     status = serializers.SerializerMethodField(read_only=True)
+    date = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Attendance
         fields = [
             "iid",
+            "date",
             "check_in",
             "check_out",
             "late_by",
@@ -27,6 +29,9 @@ class CalenderListSerializer(BaseModelSerializer):
             "hours_worked",
             "status",
         ]
+
+    def get_date(self, obj):
+        return obj.created_at.date()
 
     def get_late_by(self, obj):
         check_in_time = obj.check_in.time()
@@ -88,25 +93,13 @@ class CalenderListSerializer(BaseModelSerializer):
             status=LeaveStatusType.APPROVED, staff=obj.staff
         ).exists():
             return AttendanceStatus.LEAVE
-        if (
-            not obj.check_in
-            or not obj.check_out
-            or obj.status == AttendanceStatusType.REJECTED
-        ):
+        if obj.status == AttendanceStatusType.REJECTED:
             return AttendanceStatus.ABSENT
-        elif (
-            check_in_time < shift_start_datetime.time()
-            and check_out_time > shift_end_datetime.time()
-            and obj.status == AttendanceStatusType.APPROVED
-        ):
+        elif obj.status == AttendanceStatusType.APPROVED:
             return AttendanceStatus.PRESENT
-        elif (
-            check_in_time > shift_start_datetime.time()
-            or check_out_time < shift_end_datetime.time()
-            or obj.status == AttendanceStatusType.PENDING
-        ):
+        elif obj.status == AttendanceStatusType.PENDING:
             return AttendanceStatus.PENDING_REQUEST
-        return AttendanceStatus.PENDING_REQUEST
+        return AttendanceStatus.ABSENT
 
 
 class CalenderDetailSerializer(BaseModelSerializer):
@@ -210,3 +203,15 @@ class CalenderDetailSerializer(BaseModelSerializer):
         ):
             return AttendanceStatus.PENDING_REQUEST
         return AttendanceStatus.PENDING_REQUEST
+
+    def get_leave(self, obj):
+        leave = LeaveRequest.objects.filter(
+            is_deleted=False,
+            is_active=True,
+            start_datetime__gte=obj.check_in,
+            end_datetime__lte=obj.check_in,
+            status=LeaveStatusType.PENDING,
+        )
+        if leave.exists():
+            return leave.first().reason
+        return None
