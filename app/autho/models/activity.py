@@ -1,6 +1,6 @@
 from django.db import models
 
-from autho.constant import AttendanceRequestType
+from autho.constant import AttendanceRequestType, LeaveStatusType
 from autho.constant import AttendanceStatusType
 from helpers.mixins.constant import (
     WEBSITE_IID_STAFF_LOG,
@@ -71,7 +71,9 @@ class LeaveRequest(BaseModel):
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
     reason = models.TextField(max_length=500, null=False, blank=True, default="")
-    is_approved = models.BooleanField(default=False)
+    status = models.CharField(
+        choices=LeaveStatusType.choices, default=LeaveStatusType.PENDING
+    )
 
     class Meta:
         verbose_name = "Leave Request"

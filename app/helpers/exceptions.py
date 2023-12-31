@@ -1,7 +1,7 @@
 from rest_framework import status
 
 
-class CustomException(Exception):
+class BaseException(Exception):
     """
     Base exception for every Amphi exception.
     """
@@ -12,13 +12,13 @@ class CustomException(Exception):
     def __init__(
         self, message, error_key="error", status_code=status.HTTP_400_BAD_REQUEST
     ):
-        super(CustomException, self).__init__(message, error_key)
+        super(BaseException, self).__init__(message, error_key)
         self.message = message
         self.error_key = error_key
         self.status_code = status_code
 
 
-class SerializerNotFoundException(CustomException):
+class SerializerNotFoundException(BaseException):
     def __init__(
         self,
         message="Serializer not found",
@@ -31,7 +31,7 @@ class SerializerNotFoundException(CustomException):
         self.status_code = status_code
 
 
-class NotFoundException(CustomException):
+class NotFoundException(BaseException):
     def __init__(
         self,
         message="data not found",
@@ -40,5 +40,18 @@ class NotFoundException(CustomException):
     ):
         super().__init__(message, error_key, status_code)
         self.message = {"message": [message]}
+        self.error_key = error_key
+        self.status_code = status_code
+
+
+class RequiredException(BaseException):
+    def __init__(
+        self,
+        message="Param not provided",
+        error_key="error",
+        status_code=status.HTTP_400_BAD_REQUEST,
+    ):
+        super().__init__(message, error_key, status_code)
+        self.message = {"message": message}
         self.error_key = error_key
         self.status_code = status_code

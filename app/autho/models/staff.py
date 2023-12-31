@@ -9,7 +9,7 @@ class Staff(BaseModel):
     user = models.OneToOneField(
         "autho.UserDetail", on_delete=models.PROTECT, null=False
     )
-    staff_id = models.CharField(max_length=125, unique=True, null=False)
+    staff_id = models.IntegerField(default=0, unique=True, null=False)
     joined_date = models.DateField(null=False)
     shift_start = models.TimeField()
     shift_end = models.TimeField()
@@ -22,6 +22,13 @@ class Staff(BaseModel):
 
     class Meta:
         verbose_name = "Staff"
+
+    def save(self, *args, **kwargs):
+        if not self.staff_id:
+            last_staff = Staff.objects.order_by("-staff_id").first()
+            self.staff_id = (last_staff.staff_id + 1) if last_staff else 100
+
+        super().save(*args, **kwargs)
 
     def delete(self, force=True, *args, **kwargs):
         return super().delete(force, *args, **kwargs)
