@@ -3,12 +3,13 @@ from django.conf.urls.static import static
 from django.urls import path
 from rest_framework import routers
 
-from website.apis import DepartmentAPI
+from website.apis import DepartmentAPI, CompanyAPI
 from website.views import generate_pdf
 
 router = routers.DefaultRouter()
 
 router.register(r"web/department", DepartmentAPI, basename="departments")
+router.register(r"web/company", CompanyAPI, basename="companies")
 
 urlpatterns = [
     path("generate-pdf/", generate_pdf, name="generate_pdf"),

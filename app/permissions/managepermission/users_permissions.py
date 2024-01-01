@@ -16,3 +16,10 @@ ATTENDANCE_API = [
     ("atten-list", "get"),
     ("atten-detail", "get"),
 ]
+
+COMPANY_API = [
+    ("companies-list", "get"),
+    ("companies-list", "post"),
+    ("companies-detail", "patch"),
+    ("companies-detail", "get"),
+]

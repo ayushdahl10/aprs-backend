@@ -1,1 +1,1 @@
-from .api import DepartmentAPI
+from .api import DepartmentAPI, CompanyAPI
