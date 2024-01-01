@@ -13,7 +13,7 @@ from helpers.models.base_model import BaseModel
 
 class Company(BaseModel):
     IID_PREFIX_KEY = WEBSITE_IID_COMPANY_DETAIL
-    company_name = models.CharField(max_length=256, blank=True, null=False)
+    company_name = models.CharField(max_length=256, blank=True, null=False, unique=True)
     company_logo = models.ImageField(
         null=False,
         blank=True,
