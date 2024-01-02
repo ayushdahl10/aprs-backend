@@ -4,6 +4,8 @@ ADMIN_USER = "Admin"
 ANONYMOUS_USER = "AnonymousUser"
 REPORT_ROLE = "ReportAdmin"
 SUPER_ADMIN = "SuperAdmin"
+STAFF_ADMIN = "StaffAdmin"
+STAFF = "Staff"
 
 PRIMARY_ROLES = [
     SUPER_USER,
@@ -12,4 +14,6 @@ PRIMARY_ROLES = [
     ANONYMOUS_USER,
     REPORT_ROLE,
     SUPER_ADMIN,
+    STAFF_ADMIN,
+    STAFF,
 ]

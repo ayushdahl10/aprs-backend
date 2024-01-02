@@ -2,9 +2,7 @@ from django.contrib.auth.models import User, Group
 from django.db import transaction
 from rest_framework.response import Response
 
-from autho.constant import (
-    ADMIN,
-)
+from autho.constant import STAFF
 from autho.constant import UserTypeChoices
 from autho.models import Staff
 from autho.models import UserDetail
@@ -16,6 +14,7 @@ from autho.serializers import (
 )
 from helpers.mixins.helper import generate_random_string
 from helpers.super_viewset import SuperViewset
+from permissions.constant import STAFF
 
 
 class StaffAPI(SuperViewset):
@@ -42,7 +41,7 @@ class StaffAPI(SuperViewset):
                 user = User.objects.get(email=email)
                 return Response({"message": ["Email already exists"], "status": 404})
             except User.DoesNotExist:
-                group = Group.objects.get(name=ADMIN)
+                group = Group.objects.get(name=STAFF)
                 user = User.objects.create(
                     username=generate_random_string(12),
                     email=email,

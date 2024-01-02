@@ -99,6 +99,11 @@ class CreateStaffSerializer(serializers.ModelSerializer):
         required=True,
         many=True,
     )
+    supervisor = serializers.SlugRelatedField(
+        slug_field="iid",
+        queryset=Staff.objects.filter(is_active=True, is_deleted=False),
+        many=True,
+    )
 
     class Meta:
         model = Staff
@@ -110,6 +115,7 @@ class CreateStaffSerializer(serializers.ModelSerializer):
             "working_hours",
             "position",
             "department",
+            "supervisor",
         ]
 
     def create(self, validated_data):

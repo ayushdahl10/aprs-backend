@@ -135,3 +135,13 @@ class SuperViewset(
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return self.on_api_success_response(serializer.data, status=201)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if self.force_delete:
+            instance.delete(force=True)
+            return self.on_api_success_response("Deleted successfully", 200)
+        instance.is_deleted = True
+        instance.is_active = False
+        instance.save()
+        return self.on_api_success_response("Deleted successfully", 200)

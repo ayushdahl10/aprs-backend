@@ -13,8 +13,8 @@ from helpers.models.base_model import BaseModel
 class Attendance(BaseModel):
     IID_PREFIX_KEY = WEBSITE_IID_STAFF_LOG
     staff = models.ForeignKey("autho.Staff", on_delete=models.CASCADE, null=True)
-    check_in = models.DateTimeField()
-    check_out = models.DateTimeField()
+    check_in = models.DateTimeField(null=True)
+    check_out = models.DateTimeField(null=True)
     status = models.CharField(
         choices=AttendanceStatusType.choices, default=AttendanceStatusType.PENDING
     )
@@ -24,6 +24,9 @@ class Attendance(BaseModel):
 
     def __str__(self):
         return f"{self.staff}"
+
+    def delete(self, force=True, *args, **kwargs):
+        return super().delete(force=force)
 
 
 class AttendanceRequest(BaseModel):
@@ -54,6 +57,9 @@ class AttendanceRequest(BaseModel):
 
     def __str__(self):
         return f"{self.staff}"
+
+    def delete(self, force=True, *args, **kwargs):
+        return super().delete(force=force, *args, **kwargs)
 
 
 class LeaveRequest(BaseModel):

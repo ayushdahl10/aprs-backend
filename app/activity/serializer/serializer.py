@@ -4,7 +4,8 @@ from rest_framework import serializers
 
 from activity.constant import AttendanceStatus
 from autho.constant import AttendanceStatusType, LeaveStatusType
-from autho.models import Attendance, LeaveRequest
+from autho.models import Attendance, LeaveRequest, AttendanceRequest
+from autho.models import Staff
 from helpers.base_serializer import BaseModelSerializer
 
 
@@ -31,44 +32,52 @@ class CalenderListSerializer(BaseModelSerializer):
         ]
 
     def get_date(self, obj):
-        return obj.created_at.date()
+        if not obj.check_in:
+            return obj.check_out.date()
+        else:
+            return obj.check_in.date()
 
     def get_late_by(self, obj):
-        check_in_time = obj.check_in.time()
-        shift_start_datetime = datetime.combine(datetime.today(), obj.staff.shift_start)
-        shift_start_datetime = shift_start_datetime + timedelta(minutes=5)
-
-        if check_in_time > shift_start_datetime.time():
-            late_time_delta = (
-                datetime.combine(datetime.today(), check_in_time) - shift_start_datetime
+        if obj.check_in:
+            check_in_time = obj.check_in.time()
+            shift_start_datetime = datetime.combine(
+                datetime.today(), obj.staff.shift_start
             )
-            late_hours, remainder = divmod(late_time_delta.seconds, 3600)
-            late_minutes, _ = divmod(remainder, 60)
+            shift_start_datetime = shift_start_datetime + timedelta(minutes=5)
 
-            return f"{late_hours} hr {late_minutes} min"
+            if check_in_time > shift_start_datetime.time():
+                late_time_delta = (
+                    datetime.combine(datetime.today(), check_in_time)
+                    - shift_start_datetime
+                )
 
+                total_late_minutes = late_time_delta.total_seconds() / 60
+                return int(total_late_minutes)
         return None
 
     def get_early_by(self, obj):
-        check_out_time = obj.check_out.time()
-        shift_end_datetime = datetime.combine(datetime.today(), obj.staff.shift_end)
-        shift_end_datetime = shift_end_datetime - timedelta(minutes=5)
+        if obj.check_out:
+            check_out_time = obj.check_out.time()
+            shift_end_datetime = datetime.combine(datetime.today(), obj.staff.shift_end)
+            shift_end_datetime = shift_end_datetime - timedelta(minutes=5)
 
-        if check_out_time < shift_end_datetime.time():
-            early_time_delta = shift_end_datetime - datetime.combine(
-                datetime.today(), check_out_time
-            )
-            early_hours, remainder = divmod(early_time_delta.seconds, 3600)
-            early_minutes, _ = divmod(remainder, 60)
+            if check_out_time < shift_end_datetime.time():
+                early_time_delta = shift_end_datetime - datetime.combine(
+                    datetime.today(), check_out_time
+                )
 
-            return f"{early_hours} hr and {early_minutes} min"
-
+                total_early_minutes = early_time_delta.total_seconds() / 60
+                return int(total_early_minutes)
         return None
 
     def get_check_in(self, obj):
+        if obj.check_in is None:
+            return None
         return obj.check_in
 
     def get_check_out(self, obj):
+        if obj.check_out is None:
+            return None
         return obj.check_out
 
     def get_hours_worked(self, obj):
@@ -78,12 +87,8 @@ class CalenderListSerializer(BaseModelSerializer):
             return f"{hours_worked} hrs"
 
     def get_status(self, obj):
-        check_in_time = obj.check_in.time()
-        check_out_time = obj.check_out.time()
         shift_start_datetime = datetime.combine(datetime.today(), obj.staff.shift_start)
         shift_end_datetime = datetime.combine(datetime.today(), obj.staff.shift_end)
-        shift_start_datetime = shift_start_datetime + timedelta(minutes=5)
-        shift_end_datetime = shift_end_datetime - timedelta(minutes=5)
         if obj.check_in and obj.check_out:
             hours_worked = (obj.check_out - obj.check_in).total_seconds() / 3600
             hours_worked = round(hours_worked, 2)
@@ -215,3 +220,74 @@ class CalenderDetailSerializer(BaseModelSerializer):
         if leave.exists():
             return leave.first().reason
         return None
+
+
+class AttendanceRequestCreateSerializer(BaseModelSerializer):
+    reason = serializers.CharField(required=True)
+    time = serializers.TimeField(required=True)
+    date = serializers.DateField(required=True)
+
+    class Meta:
+        model = AttendanceRequest
+        fields = [
+            "iid",
+            "request_type",
+            "date",
+            "time",
+            "status",
+            "reason",
+        ]
+
+    def validate(self, attrs):
+        validated_data = attrs
+        atten_request = self.Meta.model.objects.filter(
+            staff=self.context.get("request").user.userdetail.staff,
+            date=validated_data["date"],
+            request_type=validated_data["request_type"],
+        )
+        if atten_request.exists():
+            raise serializers.ValidationError(
+                {"message": ["There is a request pending for this date already"]}
+            )
+        return validated_data
+
+    def create(self, validated_data):
+        user = self.context.get("request").user
+        validated_data["created_by"] = user
+        validated_data["staff"] = user.userdetail.staff
+        validated_data["status"] = AttendanceStatusType.PENDING
+        attendance_request_instance = super().create(validated_data)
+        attendance_request_instance.assigned_to.set(
+            self.context.get("request").user.userdetail.staff.supervisor.all()
+        )
+        return attendance_request_instance
+
+
+class AttendanceRequestlistSerializer(BaseModelSerializer):
+    class Meta:
+        model = AttendanceRequest
+        fields = [
+            "iid",
+            "request_type",
+            "date",
+            "time",
+            "reason",
+            "is_active",
+        ]
+
+
+class AttendanceRequestChangeSerializer(BaseModelSerializer):
+    staff = serializers.CharField(required=True)
+
+    class Meta:
+        model = AttendanceRequest
+        fields = [
+            "iid",
+            "staff",
+            "status",
+        ]
+
+    def validate_staff(self, value):
+        staff = Staff.objects.get(iid=value)
+        print(staff)
+        return staff

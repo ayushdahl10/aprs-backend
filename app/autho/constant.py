@@ -35,6 +35,7 @@ class AttendanceStatusType(TextChoices):
     REJECTED = ("rejected", _("Rejected"))
     APPROVED = ("approved", _("Approved"))
     PENDING = ("pending", _("Pending"))
+    LEAVE_ACCEPTED = ("leave", _("Leave"))
 
 
 class LeaveStatusType(TextChoices):

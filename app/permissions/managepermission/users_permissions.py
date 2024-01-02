@@ -13,8 +13,8 @@ DEPARTMENT_API = [
 ]
 
 ATTENDANCE_API = [
-    ("atten-list", "get"),
-    ("atten-detail", "get"),
+    ("calender-list", "get"),
+    ("calender-detail", "get"),
 ]
 
 COMPANY_API = [
@@ -22,4 +22,20 @@ COMPANY_API = [
     ("companies-list", "post"),
     ("companies-detail", "patch"),
     ("companies-detail", "get"),
+]
+
+ATTEN_REQUEST_API = [
+    ("attendance-request-list", "post"),
+    ("attendance-request-list", "get"),
+    ("attendance-request-detail", "get"),
+    ("attendance-request-detail", "patch"),
+    ("attendance-request-detail", "delete"),
+]
+
+ATTENDANCE_REQUEST_STATUS_API = [
+    ("attendance-request-update-attendance-request", "patch"),
+]
+
+ATTENDANCE_REQUEST_GET_STAFF_API = [
+    ("attendance-request-get-staff-pending-request", "get"),
 ]

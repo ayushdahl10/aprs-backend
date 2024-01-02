@@ -2,11 +2,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers
 
-from activity.apis import AttendanceAPI
+from activity.apis import AttendanceAPI, AttendanceRequestAPI
 
 router = routers.DefaultRouter()
 
-router.register(r"web/attendance", AttendanceAPI, basename="atten")
+router.register(r"web/calendar", AttendanceAPI, basename="calender")
+router.register(
+    r"web/attendance-request", AttendanceRequestAPI, basename="attendance-request"
+)
 
 urlpatterns = []
 
