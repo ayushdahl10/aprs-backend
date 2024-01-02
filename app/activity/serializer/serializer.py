@@ -289,5 +289,12 @@ class AttendanceRequestChangeSerializer(BaseModelSerializer):
 
     def validate_staff(self, value):
         staff = Staff.objects.get(iid=value)
-        print(staff)
         return staff
+
+    def validate(self, attrs):
+        validated_data = attrs
+        if validated_data["status"] == AttendanceStatusType.PENDING:
+            raise serializers.ValidationError(
+                {"message": "Please choose the status other than pending"}
+            )
+        return validated_data

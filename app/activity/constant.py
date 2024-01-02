@@ -6,7 +6,7 @@ class AttendanceStatus(TextChoices):
         "leave",
         "Leave",
     )
-    ABSENT = "abs", "Absent"
+    ABSENT = "absent", "Absent"
     PRESENT = (
         "present",
         "Present",
