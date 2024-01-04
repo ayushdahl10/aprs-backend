@@ -11,6 +11,7 @@ from autho.serializers import (
     RegisterUserSerializer,
     ListStaffSerializer,
     DetailStaffSerializer,
+    UpdateStaffSerializer,
 )
 from helpers.mixins.helper import generate_random_string
 from helpers.super_viewset import SuperViewset
@@ -19,8 +20,9 @@ from permissions.constant import STAFF
 
 class StaffAPI(SuperViewset):
     queryset = Staff.objects.filter()
-    create_update_serializer = CreateStaffSerializer
+    create_serializer = CreateStaffSerializer
     list_serializer = ListStaffSerializer
+    update_serializer = UpdateStaffSerializer
     detail_serializer = DetailStaffSerializer
 
     def create(self, request, *args, **kwargs):

@@ -17,6 +17,12 @@ class Staff(BaseModel):
     position = models.CharField(max_length=256, null=False, blank=True)
     department = models.ManyToManyField("website.Department")
     supervisor = models.ManyToManyField("autho.Staff")
+    # staff leave records
+    regular_leave = models.DecimalField(max_digits=8, decimal_places=2, default=0.0)
+    sick_leave = models.DecimalField(max_digits=8, decimal_places=2, default=0.0)
+    field_leave = models.DecimalField(max_digits=8, decimal_places=2, default=365)
+    parental_leave = models.DecimalField(max_digits=8, decimal_places=2, default=14)
+    mourning_leave = models.DecimalField(max_digits=8, decimal_places=2, default=14)
 
     def __str__(self) -> str:
         return f"{self.staff_id} => {self.user.user.email}"

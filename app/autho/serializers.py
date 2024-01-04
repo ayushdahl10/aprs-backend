@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
 from autho.models import Staff
+from helpers.base_serializer import BaseModelSerializer
 from website.models import Department
 from website.serializer import DepartmentListSerializer
 
@@ -73,7 +74,7 @@ class LoginSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class UserDetailSerializer(serializers.ModelSerializer):
+class UserDetailSerializer(BaseModelSerializer):
     email = serializers.CharField(read_only=True)
     first_name = serializers.CharField(read_only=True)
     last_name = serializers.CharField(read_only=True)
@@ -81,13 +82,14 @@ class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
+            "iid",
             "email",
             "first_name",
             "last_name",
         ]
 
 
-class CreateStaffSerializer(serializers.ModelSerializer):
+class CreateStaffSerializer(BaseModelSerializer):
     joined_date = serializers.DateField(required=True, allow_null=False)
     shift_start = serializers.TimeField(required=True, allow_null=False)
     shift_end = serializers.TimeField(required=True, allow_null=False)
@@ -124,7 +126,45 @@ class CreateStaffSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-class StaffDropdownSerializer(serializers.ModelSerializer):
+class UpdateStaffSerializer(BaseModelSerializer):
+    joined_date = serializers.DateField(required=True, allow_null=False)
+    shift_start = serializers.TimeField(required=True, allow_null=False)
+    shift_end = serializers.TimeField(required=True, allow_null=False)
+    position = serializers.CharField(required=True)
+    working_hours = serializers.CharField(required=True)
+    department = serializers.SlugRelatedField(
+        slug_field="iid",
+        queryset=Department.objects.filter(is_active=True, is_deleted=False),
+        required=True,
+        many=True,
+    )
+    supervisor = serializers.SlugRelatedField(
+        slug_field="iid",
+        queryset=Staff.objects.filter(is_active=True, is_deleted=False),
+        many=True,
+    )
+
+    class Meta:
+        model = Staff
+        fields = [
+            "iid",
+            "user",
+            "joined_date",
+            "shift_start",
+            "shift_end",
+            "working_hours",
+            "position",
+            "department",
+            "supervisor",
+            "sick_leave",
+            "regular_leave",
+            "parental_leave",
+            "mourning_leave",
+            "field_leave",
+        ]
+
+
+class StaffDropdownSerializer(BaseModelSerializer):
     email = serializers.CharField(source="user.user.email", read_only=True)
 
     class Meta:
@@ -151,9 +191,8 @@ class ListStaffSerializer(serializers.ModelSerializer):
         ]
 
 
-class DetailStaffSerializer(serializers.ModelSerializer):
+class DetailStaffSerializer(BaseModelSerializer):
     email = serializers.CharField(source="user.user.email", read_only=True)
-    number = serializers.CharField(source="user.number", read_only=True)
     department = DepartmentListSerializer(many=True)
     supervisor = StaffDropdownSerializer(many=True)
 
@@ -162,7 +201,6 @@ class DetailStaffSerializer(serializers.ModelSerializer):
         fields = [
             "iid",
             "email",
-            "number",
             "joined_date",
             "shift_start",
             "shift_end",
@@ -171,5 +209,10 @@ class DetailStaffSerializer(serializers.ModelSerializer):
             "staff_id",
             "department",
             "supervisor",
+            "sick_leave",
+            "regular_leave",
+            "parental_leave",
+            "mourning_leave",
+            "field_leave",
             "is_active",
         ]

@@ -39,7 +39,7 @@ class AttendanceAPI(ReadOnlyViewSet):
 
 class AttendanceRequestAPI(SuperViewset):
     queryset = AttendanceRequest.objects.filter(is_deleted=False, is_active=True)
-    create_update_serializer = AttendanceRequestCreateSerializer
+    create_serializer = AttendanceRequestCreateSerializer
     serializer_class = AttendanceRequestlistSerializer
     force_delete = True
 

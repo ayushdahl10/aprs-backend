@@ -46,7 +46,8 @@ class SuperViewset(
     lookup_field = "iid"
     list_serializer = None
     detail_serializer = None
-    create_update_serializer = None
+    create_serializer = None
+    update_serializer = None
     pagination_class = CustomPagination
     force_delete: bool = False
 
@@ -60,10 +61,14 @@ class SuperViewset(
             if not self.list_serializer:
                 return self._get_default_serializer_class()
             return self.list_serializer
-        if self.action.lower() in ["create", "partial_update"]:
-            if not self.create_update_serializer:
+        if self.action.lower() == "create":
+            if not self.create_serializer:
                 return self._get_default_serializer_class()
-            return self.create_update_serializer
+            return self.create_serializer
+        if self.action.lower() == "partial_update":
+            if not self.update_serializer:
+                return self.create_serializer
+            return self.update_serializer
         if self.action.lower() == "retrieve":
             if not self.detail_serializer:
                 return self._get_default_serializer_class()

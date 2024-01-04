@@ -12,7 +12,7 @@ from website.serializer import (
 
 class CompanyAPI(SuperViewset):
     queryset = Company.objects.filter(is_deleted=False, is_active=True)
-    create_update_serializer = CompanyCreateSerializer
+    create_serializer = CompanyCreateSerializer
     list_serializer = CompanyListSerializer
     detail_serializer = CompanyDetailSerializer
 
@@ -21,4 +21,4 @@ class DepartmentAPI(SuperViewset):
     queryset = Department.objects.filter(is_deleted=False, is_active=True)
     list_serializer = DepartmentListSerializer
     detail_serializer = DepartmentDetailSerializer
-    create_update_serializer = DepartmentCreateSerializer
+    create_serializer = DepartmentCreateSerializer
