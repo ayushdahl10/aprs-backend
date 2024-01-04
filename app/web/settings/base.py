@@ -38,7 +38,9 @@ DEBUG = True
 
 # Application definition
 REST_FRAMEWORK = {
-    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"]
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "NON_FIELD_ERRORS_KEY": "message",
+    "EXCEPTION_HANDLER": "helpers.errors.custom_exception_handler",
 }
 INSTALLED_APPS = [
     "activity",
