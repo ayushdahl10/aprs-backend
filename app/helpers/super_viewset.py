@@ -1,9 +1,9 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from rest_framework import status
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
 
-from helpers.exceptions import BaseException
 from helpers.exceptions import (
     SerializerNotFoundException,
     NotFoundException,
@@ -106,7 +106,7 @@ class SuperViewset(
     def retrieve(self, request, *args, **kwargs):
         try:
             instance = self.get_queryset().get(iid=kwargs["iid"])
-        except BaseException:
+        except ObjectDoesNotExist as e:
             raise NotFoundException(
                 message=f"Couldn't find object with iid {kwargs['iid']}.",
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -121,7 +121,7 @@ class SuperViewset(
     def partial_update(self, request, *args, **kwargs):
         try:
             instance = self.get_queryset().get(iid=kwargs["iid"])
-        except BaseException:
+        except ObjectDoesNotExist as e:
             raise NotFoundException(
                 message=f"Couldn't find object with iid {kwargs['iid']}.",
                 status_code=status.HTTP_404_NOT_FOUND,
