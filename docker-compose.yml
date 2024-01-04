@@ -6,11 +6,11 @@ services:
     build:
       context: . # Points to the project root
       dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:80
+    command: python manage.py runserver 0.0.0.0:8080
     volumes:
       - ./app/:/usr/src/app/
     ports:
-      - 8080:8080
+      - 443:8080
     env_file:
       - ./.env
     depends_on:
