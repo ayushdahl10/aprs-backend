@@ -108,6 +108,7 @@ class CreateStaffSerializer(serializers.ModelSerializer):
     class Meta:
         model = Staff
         fields = [
+            "iid",
             "user",
             "joined_date",
             "shift_start",
@@ -123,12 +124,24 @@ class CreateStaffSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
+class StaffDropdownSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(source="user.user.email", read_only=True)
+
+    class Meta:
+        model = Staff
+        fields = [
+            "iid",
+            "email",
+        ]
+
+
 class ListStaffSerializer(serializers.ModelSerializer):
     email = serializers.CharField(source="user.user.email", read_only=True)
 
     class Meta:
         model = Staff
         fields = [
+            "iid",
             "email",
             "staff_id",
             "joined_date",
@@ -142,6 +155,7 @@ class DetailStaffSerializer(serializers.ModelSerializer):
     email = serializers.CharField(source="user.user.email", read_only=True)
     number = serializers.CharField(source="user.number", read_only=True)
     department = DepartmentListSerializer(many=True)
+    supervisor = StaffDropdownSerializer(many=True)
 
     class Meta:
         model = Staff
@@ -156,5 +170,6 @@ class DetailStaffSerializer(serializers.ModelSerializer):
             "position",
             "staff_id",
             "department",
+            "supervisor",
             "is_active",
         ]
