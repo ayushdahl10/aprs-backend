@@ -1,7 +1,8 @@
 from rest_framework import status
+from rest_framework.exceptions import APIException
 
 
-class BaseException(Exception):
+class BaseException(APIException):
     """
     Base exception for every Amphi exception.
     """
