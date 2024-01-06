@@ -1,15 +1,13 @@
 import os
+from pathlib import Path
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-PROJECT_DIR = BASE_DIR
-
-DEBUG = False
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+BASE_DIR = Path(__file__).resolve().parent.parent
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = ["*"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://cheerful-regular-goat.ngrok-free.app",
 ]
-
+DEBUG = True
 
 DATABASES = {
     "default": {
@@ -21,3 +19,9 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "staticfiles"),)
+
+
+SYSTEM_USERNAME = "system-user"
