@@ -31,7 +31,7 @@ class AttendanceAPI(ReadOnlyViewSet):
     def list(self, request, *args, **kwargs):
         try:
             staff = Staff.objects.get(user__user=self.request.user)
-        except Staff.DoesNotExists:
+        except Staff.DoesNotExist:
             raise NotFoundException("You are not a valid staff")
         queryset = self.get_queryset().filter(staff=staff)
         return super().list(request=request, queryset=queryset)
