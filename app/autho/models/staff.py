@@ -27,6 +27,9 @@ class Staff(BaseModel):
     def __str__(self) -> str:
         return f"{self.staff_id} => {self.user.user.email}"
 
+    def get_basic_info(self):
+        return {"iid": self.iid, "name": self.user.user.email}
+
     class Meta:
         verbose_name = "Staff"
 

@@ -7,6 +7,8 @@ from autho.constant import AttendanceStatusType, LeaveStatusType
 from autho.models import Attendance, LeaveRequest, AttendanceRequest
 from autho.models import Staff
 from helpers.base_serializer import BaseModelSerializer
+from helpers.exceptions import NotFoundException
+from helpers.serializer_fields import DetailRelatedField
 
 
 class CalenderListSerializer(BaseModelSerializer):
@@ -264,7 +266,7 @@ class AttendanceRequestCreateSerializer(BaseModelSerializer):
 
 
 class AttendanceRequestlistSerializer(BaseModelSerializer):
-    staff = serializers.SerializerMethodField(read_only=True)
+    staff = DetailRelatedField(Staff, representation="get_basic_info")
 
     class Meta:
         model = AttendanceRequest
@@ -277,9 +279,6 @@ class AttendanceRequestlistSerializer(BaseModelSerializer):
             "reason",
             "is_active",
         ]
-
-    def get_staff(self, obj):
-        return obj.staff.iid
 
 
 class AttendanceRequestChangeSerializer(BaseModelSerializer):
@@ -294,7 +293,10 @@ class AttendanceRequestChangeSerializer(BaseModelSerializer):
         ]
 
     def validate_staff(self, value):
-        staff = Staff.objects.get(iid=value)
+        try:
+            staff = Staff.objects.get(iid=value)
+        except Staff.DoesNotExist:
+            raise NotFoundException("Staff cannot be found")
         return staff
 
     def validate(self, attrs):
