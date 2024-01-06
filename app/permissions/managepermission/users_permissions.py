@@ -3,6 +3,7 @@ STAFF_API = [
     ("staffs-list", "post"),
     ("staffs-detail", "patch"),
     ("staffs-detail", "get"),
+    ("staffs-update-user-detail", "patch"),
 ]
 
 DEPARTMENT_API = [

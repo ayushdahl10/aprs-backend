@@ -1,9 +1,9 @@
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
-from autho.models import Staff
+from autho.models import Staff, UserDetail
 from helpers.base_serializer import BaseModelSerializer
 from website.models import Department
 from website.serializer import DepartmentListSerializer
@@ -215,4 +215,31 @@ class DetailStaffSerializer(BaseModelSerializer):
             "mourning_leave",
             "field_leave",
             "is_active",
+        ]
+
+
+class UpdateUserDetailSerializer(BaseModelSerializer):
+    class Meta:
+        model = UserDetail
+        fields = [
+            "iid",
+            "dob",
+            "address",
+            "number",
+            "is_verified",
+        ]
+
+
+class UpdateUserSerializer(BaseModelSerializer):
+    group = serializers.SlugRelatedField(
+        slug_field="iid", queryset=Group.objects.all(), many=True, write_only=True
+    )
+
+    class Meta:
+        model = User
+        fields = [
+            "iid",
+            "first_name",
+            "last_name",
+            "group",
         ]

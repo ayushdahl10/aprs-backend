@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.db import transaction
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from autho.constant import STAFF
@@ -12,7 +13,10 @@ from autho.serializers import (
     ListStaffSerializer,
     DetailStaffSerializer,
     UpdateStaffSerializer,
+    UpdateUserDetailSerializer,
+    UpdateUserSerializer,
 )
+from helpers.exceptions import NotFoundException
 from helpers.mixins.helper import generate_random_string
 from helpers.super_viewset import SuperViewset
 from permissions.constant import STAFF
@@ -68,3 +72,26 @@ class StaffAPI(SuperViewset):
             staff_serializer.is_valid(raise_exception=True)
             staff_serializer.save()
         return self.on_api_success_response("Staff created successfully", status=201)
+
+    @action(methods=["patch"], detail=True, url_path="update-user")
+    def update_user_detail(self, request, *args, **kwargs):
+        try:
+            instance = Staff.objects.get(iid=kwargs.get("iid"))
+        except Exception:
+            raise NotFoundException(f"Cannot find staff with id {kwargs.get('iid')}")
+        user_detail = instance.user
+        user = instance.user.user
+        payload_user = self.request.data["user"]
+        payload_user_detail = self.request.data["user_detail"]
+        with transaction.atomic():
+            userdetail_serializer = UpdateUserDetailSerializer(
+                user_detail, data=payload_user_detail, partial=True
+            )
+            userdetail_serializer.is_valid(raise_exception=True)
+            user_serializer = UpdateUserSerializer(
+                user, data=payload_user, partial=True
+            )
+            user_serializer.is_valid(raise_exception=True)
+            userdetail_serializer.save()
+            user_serializer.save()
+        return self.on_api_success_response({"iid": kwargs.get("iid")}, 200)
