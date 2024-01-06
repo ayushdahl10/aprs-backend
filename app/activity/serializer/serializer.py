@@ -264,16 +264,22 @@ class AttendanceRequestCreateSerializer(BaseModelSerializer):
 
 
 class AttendanceRequestlistSerializer(BaseModelSerializer):
+    staff = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = AttendanceRequest
         fields = [
             "iid",
+            "staff",
             "request_type",
             "date",
             "time",
             "reason",
             "is_active",
         ]
+
+    def get_staff(self, obj):
+        return obj.staff.iid
 
 
 class AttendanceRequestChangeSerializer(BaseModelSerializer):
