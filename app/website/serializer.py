@@ -84,6 +84,13 @@ class DepartmentCreateSerializer(BaseModelSerializer):
             "is_active",
         ]
 
+    def validate_name(self, value):
+        if self.Meta.model.objects.filter(name=value).exists():
+            raise serializers.ValidationError(
+                f"fDepartment with name {value} already exists"
+            )
+        return value
+
     def create(self, validated_data):
         validated_data["created_by"] = self.context.get("request").user
         validated_data["is_active"] = True
