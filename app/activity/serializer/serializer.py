@@ -4,8 +4,8 @@ from rest_framework import serializers
 
 from activity.constant import AttendanceStatus
 from autho.constant import AttendanceStatusType, LeaveStatusType
-from autho.models import Attendance, LeaveRequest, AttendanceRequest
-from autho.models import Staff
+from autho.models import Attendance, AttendanceRequest
+from autho.models import Staff, LeaveRequest
 from helpers.base_serializer import BaseModelSerializer
 from helpers.exceptions import NotFoundException
 from helpers.serializer_fields import DetailRelatedField
@@ -14,11 +14,11 @@ from helpers.serializer_fields import DetailRelatedField
 class CalenderListSerializer(BaseModelSerializer):
     late_by = serializers.SerializerMethodField(read_only=True)
     early_by = serializers.SerializerMethodField(read_only=True)
-    check_in = serializers.SerializerMethodField(read_only=True)
-    check_out = serializers.SerializerMethodField(read_only=True)
     hours_worked = serializers.SerializerMethodField(read_only=True)
     status = serializers.SerializerMethodField(read_only=True)
     date = serializers.SerializerMethodField(read_only=True)
+    check_out = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    check_in = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = Attendance
@@ -112,8 +112,8 @@ class CalenderListSerializer(BaseModelSerializer):
 class CalenderDetailSerializer(BaseModelSerializer):
     late_by = serializers.SerializerMethodField(read_only=True)
     early_by = serializers.SerializerMethodField(read_only=True)
-    check_in = serializers.SerializerMethodField(read_only=True)
-    check_out = serializers.SerializerMethodField(read_only=True)
+    check_out = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    check_in = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     hours_worked = serializers.SerializerMethodField(read_only=True)
     status = serializers.SerializerMethodField(read_only=True)
     leave = serializers.SerializerMethodField(read_only=True)
@@ -306,3 +306,76 @@ class AttendanceRequestChangeSerializer(BaseModelSerializer):
                 {"message": "Please choose the status other than pending"}
             )
         return validated_data
+
+
+class LeaveRequestListSerializer(BaseModelSerializer):
+    staff = DetailRelatedField(Staff, representation="get_basic_info", read_only=True)
+    start_datetime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    end_datetime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+
+    class Meta:
+        model = LeaveRequest
+        fields = [
+            "iid",
+            "staff",
+            "start_datetime",
+            "end_datetime",
+            "leave_type",
+            "is_active",
+        ]
+
+
+class LeaveRequestDetailSerializer(BaseModelSerializer):
+    class Meta:
+        model = LeaveRequest
+        fields = [
+            "iid",
+            "staff",
+            "start_datetime",
+            "end_datetime",
+            "reason",
+            "status",
+        ]
+
+
+class LeaveRequestCreateSerializer(BaseModelSerializer):
+    reason = serializers.CharField(max_length=500, required=True, allow_blank=False)
+
+    class Meta:
+        model = LeaveRequest
+        fields = [
+            "iid",
+            "start_datetime",
+            "end_datetime",
+            "reason",
+            "leave_type",
+        ]
+
+    def validate(self, attrs):
+        validated_data = attrs
+        start_datetime = validated_data["start_datetime"]
+        start_date_only = start_datetime.date()
+        if self.Meta.model.objects.filter(
+            start_datetime__date=start_date_only,
+        ).exists():
+            raise serializers.ValidationError(
+                {"message": "There is already leave issued for this date"}
+            )
+        return validated_data
+
+    def create(self, validated_data):
+        validated_data["is_active"] = True
+        validated_data["staff"] = self.context.get("request").user.userdetail.staff
+        validated_data["created_by"] = self.context.get("request").user
+        validated_data["status"] = LeaveStatusType.PENDING
+        return super().create(validated_data)
+
+
+class UpdateStatusLeaveRequestSerializer(BaseModelSerializer):
+    class Meta:
+        model = LeaveRequest
+        fields = [
+            "iid",
+            "staff",
+            "status",
+        ]

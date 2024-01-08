@@ -10,6 +10,8 @@ from permissions.managepermission.users_permissions import (
     ATTEN_REQUEST_API,
     ATTENDANCE_REQUEST_STATUS_API,
     ATTENDANCE_REQUEST_GET_STAFF_API,
+    LEAVE_REQUEST_API,
+    UPDATE_LEAVE_REQUEST,
 )
 from permissions.models import Role, Permission
 
@@ -33,6 +35,7 @@ class Command(BaseCommand):
                     ATTEN_REQUEST_API,
                     ATTENDANCE_REQUEST_STATUS_API,
                     ATTENDANCE_REQUEST_GET_STAFF_API,
+                    LEAVE_REQUEST_API,
                 ],
             )
             update_user_roles(
@@ -45,6 +48,8 @@ class Command(BaseCommand):
                     ATTEN_REQUEST_API,
                     ATTENDANCE_REQUEST_STATUS_API,
                     ATTENDANCE_REQUEST_GET_STAFF_API,
+                    LEAVE_REQUEST_API,
+                    UPDATE_LEAVE_REQUEST,
                 ],
             )
             update_user_roles(
@@ -55,14 +60,13 @@ class Command(BaseCommand):
                     STAFF_API,
                     ATTENDANCE_REQUEST_GET_STAFF_API,
                     ATTENDANCE_REQUEST_STATUS_API,
+                    LEAVE_REQUEST_API,
+                    UPDATE_LEAVE_REQUEST,
                 ],
             )
             update_user_roles(
                 STAFF,
-                [
-                    ATTENDANCE_API,
-                    ATTEN_REQUEST_API,
-                ],
+                [ATTENDANCE_API, ATTEN_REQUEST_API, LEAVE_REQUEST_API],
             )
         print(f"role permissions updated successfully")
 

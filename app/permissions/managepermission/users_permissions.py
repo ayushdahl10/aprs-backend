@@ -40,3 +40,15 @@ ATTENDANCE_REQUEST_STATUS_API = [
 ATTENDANCE_REQUEST_GET_STAFF_API = [
     ("attendance-request-get-staff-pending-request", "get"),
 ]
+
+LEAVE_REQUEST_API = [
+    ("leave-request-list", "post"),
+    ("leave-request-list", "get"),
+    ("leave-request-detail", "get"),
+    ("leave-request-detail", "patch"),
+    ("leave-request-detail", "delete"),
+]
+
+UPDATE_LEAVE_REQUEST = [
+    ("leave-update-leave-request", "patch"),
+]

@@ -42,3 +42,11 @@ class LeaveStatusType(TextChoices):
     REJECTED = ("rejected", _("Rejected"))
     APPROVED = ("approved", _("Approved"))
     PENDING = ("pending", _("Pending"))
+
+
+class LeaveRequestType(TextChoices):
+    SICK_LEAVE = ("sick_leave", _("Sick Leave"))
+    ANNUAL_LEAVE = ("annual_leave", _("Annual Leave"))
+    FIELD_LEAVE = ("field_leave", _("Field Leave"))
+    MOURNING_LEAVE = ("mourning_leave", _("Mourning Leave"))
+    PARENTAL_LEAVE = ("parental_leave", _("Parental Leave"))

@@ -1,6 +1,6 @@
 from django.db import models
 
-from autho.constant import AttendanceRequestType, LeaveStatusType
+from autho.constant import AttendanceRequestType, LeaveStatusType, LeaveRequestType
 from autho.constant import AttendanceStatusType
 from helpers.mixins.constant import (
     WEBSITE_IID_STAFF_LOG,
@@ -80,12 +80,18 @@ class LeaveRequest(BaseModel):
     status = models.CharField(
         choices=LeaveStatusType.choices, default=LeaveStatusType.PENDING
     )
+    leave_type = models.CharField(
+        choices=LeaveRequestType.choices, default=LeaveRequestType.ANNUAL_LEAVE
+    )
 
     class Meta:
         verbose_name = "Leave Request"
 
     def __str__(self):
         return f"{self.staff}"
+
+    def delete(self, force=True, *args, **kwargs):
+        return super().delete(force=force)
 
 
 class StaffActivityLogs(BaseModel):
