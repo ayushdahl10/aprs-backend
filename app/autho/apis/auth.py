@@ -117,5 +117,9 @@ class ValidateTokenAPI(generics.ListAPIView):
     authentication_classes = [TokenAuthentication]
 
     def list(self, request, *args, **kwargs):
-        user = str(self.request.user)
-        return Response({"user": user}, status=status.HTTP_200_OK)
+        user = self.request.user
+        user_detail = {
+            "email": user.email,
+            "role": user.groups.all().values_list("name"),
+        }
+        return Response(user_detail, status=status.HTTP_200_OK)
