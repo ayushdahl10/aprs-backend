@@ -1,6 +1,6 @@
 import django_filters
 
-from autho.models import Attendance
+from autho.models import Attendance, AttendanceRequest
 
 
 class CalenderFilter(django_filters.FilterSet):
@@ -10,4 +10,14 @@ class CalenderFilter(django_filters.FilterSet):
         model = Attendance
         fields = [
             "date",
+        ]
+
+
+class AttendanceRequestFilter(django_filters.FilterSet):
+    status = django_filters.CharFilter(lookup_expr="exact")
+
+    class Meta:
+        model = AttendanceRequest
+        fields = [
+            "status",
         ]

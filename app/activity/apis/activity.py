@@ -5,7 +5,7 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.decorators import action
 
-from activity.filters import CalenderFilter
+from activity.filters import CalenderFilter, AttendanceRequestFilter
 from activity.serializer import (
     CalenderListSerializer,
     CalenderDetailSerializer,
@@ -45,7 +45,11 @@ class AttendanceRequestAPI(SuperViewset):
     queryset = AttendanceRequest.objects.filter(is_deleted=False, is_active=True)
     create_serializer = AttendanceRequestCreateSerializer
     serializer_class = AttendanceRequestlistSerializer
+    filterset_class = AttendanceRequestFilter
     force_delete = True
+
+    def get_queryset(self):
+        return self.queryset
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset().filter(
@@ -149,10 +153,12 @@ class AttendanceRequestAPI(SuperViewset):
 
     @action(methods=["get"], detail=False, url_path="staff-request")
     def get_staff_pending_request(self, request, *args, **kwargs):
+        req_status = self.request.GET.get("status", None)
         queryset = self.get_queryset().filter(
-            assigned_to=self.request.user.userdetail.staff,
-            status=AttendanceStatusType.PENDING,
+            assigned_to=self.request.user.userdetail.staff
         )
+        if status is not None:
+            queryset = self.get_queryset().filter(status=req_status)
         if self.is_paginated:
             paginator = self.pagination_class()
             paginated_queryset = paginator.paginate_queryset(
