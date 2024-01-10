@@ -120,6 +120,6 @@ class ValidateTokenAPI(generics.ListAPIView):
         user = self.request.user
         user_detail = {
             "email": user.email,
-            "role": user.groups.all().values_list("name"),
+            "role": user.groups.all().values_list("name", flat=True),
         }
         return Response(user_detail, status=status.HTTP_200_OK)
