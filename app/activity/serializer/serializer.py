@@ -3,7 +3,7 @@ from datetime import timedelta, datetime
 from rest_framework import serializers
 
 from activity.constant import AttendanceStatus
-from autho.constant import AttendanceStatusType, LeaveStatusType
+from autho.constant import AttendanceStatusType, LeaveStatusType, LeaveRequestType
 from autho.models import Attendance, AttendanceRequest
 from autho.models import Staff, LeaveRequest
 from helpers.base_serializer import BaseModelSerializer
@@ -353,25 +353,46 @@ class LeaveRequestCreateSerializer(BaseModelSerializer):
 
     def validate(self, attrs):
         validated_data = attrs
-        start_datetime = validated_data["start_datetime"]
-        end_datetime = validated_data["end_datetime"]
-        start_date_only = start_datetime.date()
-
-        if self.Meta.model.objects.filter(
-            start_datetime__date=start_date_only,
-        ).exists():
-            raise serializers.ValidationError(
-                {"message": "There is already leave issued for this date"}
-            )
         staff = self.context.get("request").user.userdetail.staff
         sick_leave = staff.sick_leave
         regular_leave = staff.regular_leave
         mourning_leave = staff.mourning_leave
+        parental_leave = staff.parental_leave
+        start_datetime = validated_data["start_datetime"]
+        end_datetime = validated_data["end_datetime"]
+        start_date_only = start_datetime.date()
+        if self.Meta.model.objects.filter(
+            start_datetime__date=start_date_only,
+        ).exists():
+            raise serializers.ValidationError(
+                {"message": ["There is already leave issued for this date"]}
+            )
         if validated_data["end_datetime"] >= validated_data["start_datetime"]:
             diff = end_datetime - start_datetime
         else:
-            diff = start_datetime - end_datetime
-
+            raise serializers.ValidationError(
+                {"message": ["end datetime cannot be less than start datetime"]}
+            )
+        if LeaveRequestType.ANNUAL_LEAVE == validated_data["leave_type"]:
+            if regular_leave < diff:
+                raise serializers.ValidationError(
+                    {"message": ["You dont have enough leave left"]}
+                )
+        elif LeaveRequestType.SICK_LEAVE == validated_data["leave_type"]:
+            if sick_leave < diff:
+                raise serializers.ValidationError(
+                    {"message": ["You dont have enough leave left"]}
+                )
+        elif LeaveRequestType.MOURNING_LEAVE == validated_data["leave_type"]:
+            if mourning_leave < diff:
+                raise serializers.ValidationError(
+                    {"message": ["You dont have enough leave left"]}
+                )
+        elif LeaveRequestType.PARENTAL_LEAVE == validated_data["leave_type"]:
+            if parental_leave < diff:
+                raise serializers.ValidationError(
+                    {"message": ["You dont have enough leave left"]}
+                )
         return validated_data
 
     def create(self, validated_data):
