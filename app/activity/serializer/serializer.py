@@ -355,6 +355,7 @@ class LeaveRequestCreateSerializer(BaseModelSerializer):
         validated_data = attrs
         start_datetime = validated_data["start_datetime"]
         start_date_only = start_datetime.date()
+
         if self.Meta.model.objects.filter(
             start_datetime__date=start_date_only,
         ).exists():

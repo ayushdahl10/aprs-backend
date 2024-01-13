@@ -60,3 +60,4 @@ django-storages==1.13.2
 django-json-widget==1.1.1
 django-health-check==3.17.0 
 redis==5.0.1
+django-redis==5.4.0

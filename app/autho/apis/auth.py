@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.db import transaction
+from django.db.models import ObjectDoesNotExist
 from django.http import Http404
 from rest_framework import generics
 from rest_framework import status
@@ -93,7 +94,7 @@ class UserDetailAPI(generics.RetrieveAPIView):
         try:
             user_detail = self.get_queryset().get(user=self.request.user)
             return user_detail
-        except UserDetail.DoesNotExist:
+        except ObjectDoesNotExist:
             raise Http404("UserDetail does not exist for the specified user.")
 
     def retrieve(self, request, *args, **kwargs):

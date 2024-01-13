@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "permissions",
     "drf_yasg",
     "storages",
+    "django_redis",
 ]
 
 MIDDLEWARE = [
