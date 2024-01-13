@@ -68,11 +68,10 @@ class LeaveRequest(BaseModel):
         "autho.Staff",
         on_delete=models.CASCADE,
         null=True,
-        related_name="leave_requests_staff",
+        related_name="leave_request",
     )
     assigned_to = models.ManyToManyField(
         "autho.Staff",
-        related_name="leave_requests_assigned_to",
     )
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()

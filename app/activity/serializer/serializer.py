@@ -354,6 +354,7 @@ class LeaveRequestCreateSerializer(BaseModelSerializer):
     def validate(self, attrs):
         validated_data = attrs
         start_datetime = validated_data["start_datetime"]
+        end_datetime = validated_data["end_datetime"]
         start_date_only = start_datetime.date()
 
         if self.Meta.model.objects.filter(
@@ -362,6 +363,15 @@ class LeaveRequestCreateSerializer(BaseModelSerializer):
             raise serializers.ValidationError(
                 {"message": "There is already leave issued for this date"}
             )
+        staff = self.context.get("request").user.userdetail.staff
+        sick_leave = staff.sick_leave
+        regular_leave = staff.regular_leave
+        mourning_leave = staff.mourning_leave
+        if validated_data["end_datetime"] >= validated_data["start_datetime"]:
+            diff = end_datetime - start_datetime
+        else:
+            diff = start_datetime - end_datetime
+
         return validated_data
 
     def create(self, validated_data):
