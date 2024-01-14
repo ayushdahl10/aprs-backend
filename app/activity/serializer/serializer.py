@@ -9,6 +9,7 @@ from autho.models import Staff, LeaveRequest
 from helpers.base_serializer import BaseModelSerializer
 from helpers.exceptions import NotFoundException
 from helpers.serializer_fields import DetailRelatedField
+from autho.constant import LeaveDaysType
 
 
 class CalenderListSerializer(BaseModelSerializer):
@@ -318,8 +319,8 @@ class LeaveRequestListSerializer(BaseModelSerializer):
         fields = [
             "iid",
             "staff",
-            "start_datetime",
-            "end_datetime",
+            "start_date",
+            "end_date",
             "leave_type",
             "is_active",
         ]
@@ -331,8 +332,8 @@ class LeaveRequestDetailSerializer(BaseModelSerializer):
         fields = [
             "iid",
             "staff",
-            "start_datetime",
-            "end_datetime",
+            "start_date",
+            "end_date",
             "reason",
             "status",
         ]
@@ -345,10 +346,11 @@ class LeaveRequestCreateSerializer(BaseModelSerializer):
         model = LeaveRequest
         fields = [
             "iid",
-            "start_datetime",
-            "end_datetime",
+            "start_date",
+            "end_date",
             "reason",
             "leave_type",
+            "leave_days",
         ]
 
     def validate(self, attrs):
@@ -358,21 +360,26 @@ class LeaveRequestCreateSerializer(BaseModelSerializer):
         regular_leave = staff.regular_leave
         mourning_leave = staff.mourning_leave
         parental_leave = staff.parental_leave
-        start_datetime = validated_data["start_datetime"]
-        end_datetime = validated_data["end_datetime"]
-        start_date_only = start_datetime.date()
+        start_date = validated_data["start_date"]
+        end_date = validated_data["end_date"]
         if self.Meta.model.objects.filter(
-            start_datetime__date=start_date_only,
+            start_date=start_date,
         ).exists():
             raise serializers.ValidationError(
                 {"message": ["There is already leave issued for this date"]}
             )
-        if validated_data["end_datetime"] >= validated_data["start_datetime"]:
-            diff = end_datetime - start_datetime
-        else:
+        if start_date > end_date:
             raise serializers.ValidationError(
-                {"message": ["end datetime cannot be less than start datetime"]}
+                {"message": "End date cannot be smaller than start date"}
             )
+        else:
+            if (
+                validated_data["leave_days"] == LeaveDaysType.FIRST_HALF_LEAVE
+                or validated_data["leave_days"] == LeaveDaysType.SECOND_HALF_LEAVE
+            ):
+                diff = 0.5
+            else:
+                diff = abs((end_date - start_date).days) + 1
         if LeaveRequestType.ANNUAL_LEAVE == validated_data["leave_type"]:
             if regular_leave < diff:
                 raise serializers.ValidationError(
