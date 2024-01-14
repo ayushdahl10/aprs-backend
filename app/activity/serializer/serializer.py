@@ -4,12 +4,12 @@ from rest_framework import serializers
 
 from activity.constant import AttendanceStatus
 from autho.constant import AttendanceStatusType, LeaveStatusType, LeaveRequestType
+from autho.constant import LeaveDaysType
 from autho.models import Attendance, AttendanceRequest
 from autho.models import Staff, LeaveRequest
 from helpers.base_serializer import BaseModelSerializer
 from helpers.exceptions import NotFoundException
 from helpers.serializer_fields import DetailRelatedField
-from autho.constant import LeaveDaysType
 
 
 class CalenderListSerializer(BaseModelSerializer):
@@ -385,21 +385,29 @@ class LeaveRequestCreateSerializer(BaseModelSerializer):
                 raise serializers.ValidationError(
                     {"message": ["You dont have enough leave left"]}
                 )
+            staff.regular_leave -= diff
+            staff.save()
         elif LeaveRequestType.SICK_LEAVE == validated_data["leave_type"]:
             if sick_leave < diff:
                 raise serializers.ValidationError(
                     {"message": ["You dont have enough leave left"]}
                 )
+            staff.sick_leave -= diff
+            staff.save()
         elif LeaveRequestType.MOURNING_LEAVE == validated_data["leave_type"]:
             if mourning_leave < diff:
                 raise serializers.ValidationError(
                     {"message": ["You dont have enough leave left"]}
                 )
+            staff.mourning_leave -= diff
+            staff.save()
         elif LeaveRequestType.PARENTAL_LEAVE == validated_data["leave_type"]:
             if parental_leave < diff:
                 raise serializers.ValidationError(
                     {"message": ["You dont have enough leave left"]}
                 )
+            staff.regular_leave -= diff
+            staff.save()
         return validated_data
 
     def create(self, validated_data):
