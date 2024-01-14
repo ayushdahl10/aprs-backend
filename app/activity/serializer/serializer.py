@@ -407,7 +407,7 @@ class LeaveRequestCreateSerializer(BaseModelSerializer):
         validated_data["staff"] = self.context.get("request").user.userdetail.staff
         validated_data["created_by"] = self.context.get("request").user
         validated_data["status"] = LeaveStatusType.PENDING
-        super().create(validated_data)
+        return super().create(validated_data)
 
 
 class UpdateStatusLeaveRequestSerializer(BaseModelSerializer):
