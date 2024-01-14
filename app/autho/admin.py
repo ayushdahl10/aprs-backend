@@ -61,7 +61,7 @@ class AttendanceRequestAdmin(AdminBaseModel):
         "iid",
         "staff",
         "reason",
-        "start_datetime",
-        "end_datetime",
+        "start_date",
+        "end_date",
         "status",
     ]

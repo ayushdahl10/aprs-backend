@@ -1,6 +1,6 @@
 from django.db import models
 
-from autho.constant import AttendanceRequestType, LeaveStatusType, LeaveRequestType
+from autho.constant import AttendanceRequestType, LeaveStatusType, LeaveRequestType,LeaveDaysType
 from autho.constant import AttendanceStatusType
 from helpers.mixins.constant import (
     WEBSITE_IID_STAFF_LOG,
@@ -73,14 +73,17 @@ class LeaveRequest(BaseModel):
     assigned_to = models.ManyToManyField(
         "autho.Staff",
     )
-    start_datetime = models.DateTimeField()
-    end_datetime = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
     reason = models.TextField(max_length=500, null=False, blank=True, default="")
     status = models.CharField(
         choices=LeaveStatusType.choices, default=LeaveStatusType.PENDING
     )
     leave_type = models.CharField(
         choices=LeaveRequestType.choices, default=LeaveRequestType.ANNUAL_LEAVE
+    )
+    leave_days=models.CharField(
+        choices=LeaveDaysType.choices,default=LeaveDaysType.FULL_DAY_LEAVE
     )
 
     class Meta:

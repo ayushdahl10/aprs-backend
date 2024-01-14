@@ -50,3 +50,8 @@ class LeaveRequestType(TextChoices):
     FIELD_LEAVE = ("field_leave", _("Field Leave"))
     MOURNING_LEAVE = ("mourning_leave", _("Mourning Leave"))
     PARENTAL_LEAVE = ("parental_leave", _("Parental Leave"))
+
+class LeaveDaysType(TextChoices):
+    FULL_DAY_LEAVE = ("full", _("Full"))
+    FIRST_HALF_LEAVE = ("first", _("First Half"))
+    SECOND_HALF_LEAVE=("second",_("Second Half"))
