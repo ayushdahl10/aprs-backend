@@ -13,3 +13,6 @@ static/
 
 #ignore all migrations except __init__.py file
 **/migrations/
+
+#ignore env file
+env/
