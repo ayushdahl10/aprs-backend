@@ -182,7 +182,10 @@ class LeaveRequestAPI(SuperViewset):
     detail_serializer = LeaveRequestDetailSerializer
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(Q(status=LeaveStatusType.PENDING))
+        queryset = self.get_queryset().filter(
+            Q(status=LeaveStatusType.PENDING)
+            & Q(staff=self.request.user.userdetail.staff)
+        )
         return super().list(request, queryset=queryset, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):

@@ -311,8 +311,6 @@ class AttendanceRequestChangeSerializer(BaseModelSerializer):
 
 class LeaveRequestListSerializer(BaseModelSerializer):
     staff = DetailRelatedField(Staff, representation="get_basic_info", read_only=True)
-    start_datetime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    end_datetime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = LeaveRequest
@@ -327,6 +325,8 @@ class LeaveRequestListSerializer(BaseModelSerializer):
 
 
 class LeaveRequestDetailSerializer(BaseModelSerializer):
+    staff = DetailRelatedField(Staff, representation="get_basic_info", read_only=True)
+
     class Meta:
         model = LeaveRequest
         fields = [
@@ -335,7 +335,8 @@ class LeaveRequestDetailSerializer(BaseModelSerializer):
             "start_date",
             "end_date",
             "reason",
-            "status",
+            "leave_type",
+            "leave_days",
         ]
 
 
