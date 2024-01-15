@@ -19,7 +19,7 @@ from channels.security.websocket import AllowedHostsOriginValidator
 from django.core.asgi import get_asgi_application
 from chat import routing
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "amphitheater.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "web.settings")
 
 print("ASGI SETTINGS: ", os.environ.get("DJANGO_SETTINGS_MODULE"))
 application = ProtocolTypeRouter(
