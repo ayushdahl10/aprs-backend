@@ -1,50 +1,152 @@
-<!-- chat/templates/chat/room.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
     <title>Chat Room</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/4.0.0/emojionearea.min.css">
+
+
+    <style>
+        #chat-message-input {
+          width: 800px;
+        }
+        body {
+          background-color: #2D2C3A;
+        }
+        .p-2 {
+          display: flex;
+          flex-direction: column;
+          height: calc(100vh - 50px); /* Adjust based on your needs */
+        }
+        .chat-log {
+          flex-grow: 1;
+          overflow: auto;
+          display: flex;
+          flex-direction: column-reverse;
+          margin:0.5rem;
+          border-width:0.1px;
+          border-style:solid;
+          border-color:#2D2C4A;
+          padding:'2px;
+        }
+        .text-area {
+          margin-top: auto;
+        }
+        .align-self-start {
+          align-self: flex-start;
+        }
+        .align-self-end {
+          align-self: flex-end;
+        }
+        .card {
+          padding: 0.1rem;
+          font-size: 0.9rem;
+        }
+        .username {
+  color: blue;
+  font-weight: bold;
+ }
+    </style>
 </head>
 <body>
-<textarea id="chat-log" cols="100" rows="20"></textarea><br>
-<input id="chat-message-input" type="text" size="100"><br>
-<input id="chat-message-submit" type="button" value="Send">
+<div class="p-2">
+    <div id="chat-log" class="mb-1 chat-log"></div>
+    <div class="text-area">
+    <textarea id="chat-message-input" class="my-2 form-control" rows="2"
+              placeholder="Enter your message here"></textarea>
+        <input id="chat-message-submit" class="btn btn-primary mt-2" value="Send">
+    </div>
+</div>
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+      selector: "#chat-message-input",
+      plugins: "emoticons",
+      toolbar: "emoticons",
+      toolbar_location: "bottom",
+      menubar: false,
+      statusbar:false,
+      height: 150, // Set the height to 200 pixels
+      width: '50%', // Set the width to 100% of the parent element
+ setup: function (editor) {
+     editor.on('keydown', function (e) {
+       if (e.shiftKey && e.keyCode === 13) { // Check if Shift and Enter were pressed
+         e.preventDefault(); // Prevent the default action (creating a new line)
+         editor.execCommand('InsertLineBreak'); // Insert a new line at the cursor position
+       } else if (!e.shiftKey && e.keyCode === 13) { // Check if only Enter was pressed
+         e.preventDefault(); // Prevent the default action (creating a new line)
+         document.querySelector('#chat-message-submit').click(); // Trigger the click event on the Send button
+       }
+     });
+   }
+    });
+</script>
+
 {{ room_name|json_script:"room-name" }}
 <script>
     const roomName = JSON.parse(document.getElementById('room-name').textContent);
 
     const chatSocket = new WebSocket(
-        'ws://'
-        + window.location.host
-        + '/ws/chat/'
-        + roomName
-        + '/'
+       'ws://'
+       + window.location.host
+       + '/ws/view/chat/'
+       + roomName
+       + '/'
     );
 
-    chatSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        document.querySelector('#chat-log').value += (data.message + '\n');
-    };
+    let lastMessagePosition = null;
 
-    chatSocket.onclose = function(e) {
-        console.error('Chat socket closed unexpectedly');
+    chatSocket.onmessage = function(e) {
+    var username = sessionStorage.getItem('username');
+    const data = JSON.parse(e.data);
+    const chatLog = document.querySelector('.chat-log');
+
+    // Store the current scroll position
+    lastMessagePosition = chatLog.scrollHeight;
+
+    const messageCardWrapper = document.createElement('div');
+    const messageCard = document.createElement('div');
+    if (data.username == username)
+    {
+     username = 'You';
+     messageCardWrapper.classList.add('align-self-end');
+    }
+    else {
+     username = data.username;
+     messageCardWrapper.classList.add('align-self-start');
+    }
+    messageCard.className = 'card my-2';
+    messageCard.innerHTML = '<div class="card-body"><span class="username">'+ username + '</span>: ' + data.message +'</div>';
+    messageCardWrapper.appendChild(messageCard);
+    chatLog.prepend(messageCardWrapper);
+
+    // Delay the scroll operation until after the next render cycle
+    setTimeout(() => {
+     // Scroll to the last message
+     chatLog.scrollTop = lastMessagePosition;
+    }, 0);
     };
 
     document.querySelector('#chat-message-input').focus();
     document.querySelector('#chat-message-input').onkeyup = function(e) {
-        if (e.key === 'Enter') {  // enter, return
-            document.querySelector('#chat-message-submit').click();
-        }
+       if (e.key === 'Enter') { // enter, return
+           document.querySelector('#chat-message-submit').click();
+       }
     };
 
     document.querySelector('#chat-message-submit').onclick = function(e) {
-        const messageInputDom = document.querySelector('#chat-message-input');
-        const message = messageInputDom.value;
-        chatSocket.send(JSON.stringify({
-            'message': message
-        }));
-        messageInputDom.value = '';
+           const tinyMCEInstance = tinymce.activeEditor;
+           var username = sessionStorage.getItem('username');
+           const message = tinyMCEInstance.getContent();
+           chatSocket.send(JSON.stringify({
+               'message': message,
+               'username':username
+           }));
+           tinyMCEInstance.setContent(''); // clear the editor content
     };
 </script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
