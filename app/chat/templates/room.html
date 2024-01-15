@@ -5,8 +5,6 @@
     <title>Chat Room</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/4.0.0/emojionearea.min.css">
-
-
     <style>
         #chat-message-input {
           width: 800px;
@@ -35,8 +33,8 @@
           align-self: flex-end;
         }
         .card {
-          padding: 0.1rem;
-          font-size: 0.9rem;
+          padding: 0.01rem;
+          font-size: 0.85rem;
         }
         .card-body {
          display: flex;
@@ -97,35 +95,43 @@
     let lastMessagePosition = null;
 
     chatSocket.onmessage = function(e) {
-    var username = sessionStorage.getItem('username');
-    const data = JSON.parse(e.data);
-    const chatLog = document.querySelector('.chat-log');
+   var username = sessionStorage.getItem('username');
+   const data = JSON.parse(e.data);
+   const chatLog = document.querySelector('.chat-log');
+   const created_at = data.created_at;
 
-    // Store the current scroll position
-    lastMessagePosition = chatLog.scrollHeight;
+   // Store the current scroll position
+   lastMessagePosition = chatLog.scrollHeight;
 
-    const messageCardWrapper = document.createElement('div');
-    const messageCard = document.createElement('div');
-    if (data.username == username)
-    {
-     username = 'You';
-     messageCardWrapper.classList.add('align-self-end');
-    }
-    else {
-     username = data.username;
-     messageCardWrapper.classList.add('align-self-start');
-    }
-    messageCard.className = 'card my-2';
-    messageCard.innerHTML = '<div class="card-body"><span class="username">'+ username + '</span>:&nbsp' + data.message +'</div>';
-    messageCardWrapper.appendChild(messageCard);
-    chatLog.prepend(messageCardWrapper);
+   const messageCardWrapper = document.createElement('div');
+   const messageCard = document.createElement('div');
+   const timestampDiv = document.createElement('div');
 
-    // Delay the scroll operation until after the next render cycle
-    setTimeout(() => {
-     // Scroll to the last message
-     chatLog.scrollTop = lastMessagePosition;
-    }, 0);
-    };
+   if (data.username == username) {
+       username = 'You';
+       messageCardWrapper.classList.add('align-self-end');
+   } else {
+       username = data.username;
+       messageCardWrapper.classList.add('align-self-start');
+   }
+
+   messageCard.className = 'card my-1';
+   messageCard.innerHTML = '<div class="card-body"><span class="username">'+ username + '</span>:&nbsp' + data.message + '</div>';
+
+   timestampDiv.className = 'card-footer text-muted';
+   timestampDiv.innerText = created_at;
+
+   messageCardWrapper.appendChild(messageCard);
+   messageCardWrapper.appendChild(timestampDiv);
+   chatLog.prepend(messageCardWrapper);
+
+   // Delay the scroll operation until after the next render cycle
+   setTimeout(() => {
+       // Scroll to the last message
+       chatLog.scrollTop = lastMessagePosition;
+   }, 0);
+};
+
 
     document.querySelector('#chat-message-input').focus();
     document.querySelector('#chat-message-input').onkeyup = function(e) {
