@@ -43,6 +43,7 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "helpers.errors.custom_exception_handler",
 }
 INSTALLED_APPS = [
+    "chat",
     "activity",
     "django_json_widget",
     "payment",

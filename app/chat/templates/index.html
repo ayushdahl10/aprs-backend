@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat Rooms</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+          background-color: #2D2C3A;
+        }
+        h1{
+        color:white;
+        }
+    </style>
+</head>
+<body>
+<center><h1>Enter Group Chat</h1></center>
+<div class="d-flex align-items-center justify-content-center">
+    <div class="card w-25">
+        <div class="card-body">
+            <div class="form-group">
+                <label for="username-input">Username</label>
+                <input id="username-input" type="text" class="form-control my-2 w-100"
+                       placeholder="Enter your username" required>
+            </div>
+            <div class="form-group">
+                <label for="room-name-input">Room Name</label>
+                <input id="room-name-input" type="text" class="form-control w-100" value="aprs" disabled>
+            </div>
+            <input id="room-name-submit" type="button" class="btn btn-primary my-3 w-50" value="Enter" required>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelector('#room-name-input').focus();
+    document.querySelector('#room-name-input').onkeyup = function(e) {
+        if (e.key === 'Enter') { // enter, return
+            document.querySelector('#room-name-submit').click();
+        }
+    };
+
+    document.querySelector('#room-name-submit').onclick = function(e) {
+        var roomName = document.querySelector('#room-name-input').value;
+        var username = document.querySelector('#username-input').value;
+        if (!username) {
+            alert("Username cannot be empty.");
+            return;
+        }
+        sessionStorage.setItem('username', username);
+        window.location.pathname = 'view/chat/' + roomName + '/';
+    };
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
