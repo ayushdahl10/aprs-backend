@@ -24,11 +24,6 @@
           overflow: auto;
           display: flex;
           flex-direction: column-reverse;
-          margin:0.5rem;
-          border-width:0.1px;
-          border-style:solid;
-          border-color:#2D2C4A;
-          padding:'2px;
         }
         .text-area {
           margin-top: auto;
@@ -43,10 +38,14 @@
           padding: 0.1rem;
           font-size: 0.9rem;
         }
+        .card-body {
+         display: flex;
+         justify-content: space-between;
+        }
         .username {
-  color: blue;
-  font-weight: bold;
- }
+          color: blue;
+          font-weight: bold;
+         }
     </style>
 </head>
 <body>
@@ -117,7 +116,7 @@
      messageCardWrapper.classList.add('align-self-start');
     }
     messageCard.className = 'card my-2';
-    messageCard.innerHTML = '<div class="card-body"><span class="username">'+ username + '</span>: ' + data.message +'</div>';
+    messageCard.innerHTML = '<div class="card-body"><span class="username">'+ username + '</span>:&nbsp' + data.message +'</div>';
     messageCardWrapper.appendChild(messageCard);
     chatLog.prepend(messageCardWrapper);
 
