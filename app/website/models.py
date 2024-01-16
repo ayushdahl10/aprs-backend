@@ -4,6 +4,7 @@ from helpers.mixins.constant import (
     WEBSITE_IID_ADVANCE_SETTING,
     WEBSITE_IID_COMPANY_DETAIL,
     WEBSITE_IID_DEPARTMENT,
+    WEBSITE_IID_TERMINAL,
 )
 from helpers.models.base_model import BaseModel
 
@@ -65,3 +66,21 @@ class Department(BaseModel):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class Terminal(BaseModel):
+    IID_PREFIX_KEY = WEBSITE_IID_TERMINAL
+    name = models.CharField(
+        max_length=256,
+        null=False,
+        blank=True,
+    )
+    terminal_ip = models.CharField(
+        max_length=256,
+        null=False,
+        blank=True,
+    )
+    config = models.JSONField(default={}, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.name}=>{self.terminal_ip}"

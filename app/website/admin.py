@@ -1,10 +1,7 @@
 from django.contrib import admin
+
 from helpers.models.baseadmin_model import AdminBaseModel
-from website.models import (
-    Company,
-    Config,
-Department,
-)
+from website.models import Company, Config, Department, Terminal
 
 
 @admin.register(Company)
@@ -21,6 +18,12 @@ class CompanyDetailAdmin(AdminBaseModel):
 class AdvanceSettingAdmin(AdminBaseModel):
     list_display = ["key", "value", "config", "is_active", "created_by"]
 
+
 @admin.register(Department)
 class DepartmentAdmin(AdminBaseModel):
-    list_display = ["iid","name","description","is_active"]
+    list_display = ["iid", "name", "description", "is_active"]
+
+
+@admin.register(Terminal)
+class TerminalAdmin(AdminBaseModel):
+    list_display = ["iid", "name", "terminal_ip"]
