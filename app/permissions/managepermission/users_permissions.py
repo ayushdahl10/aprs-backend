@@ -47,8 +47,10 @@ LEAVE_REQUEST_API = [
     ("leave-request-detail", "get"),
     ("leave-request-detail", "patch"),
     ("leave-request-detail", "delete"),
+    ("leave-request-check-request", "get"),
 ]
 
 UPDATE_LEAVE_REQUEST = [
-    ("leave-update-leave-request", "patch"),
+    ("leave-request-update-leave-request", "patch"),
+    ("leave-request-check-staff-request", "get"),
 ]
