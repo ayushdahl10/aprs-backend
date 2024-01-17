@@ -420,6 +420,8 @@ class LeaveRequestCreateSerializer(BaseModelSerializer):
 
 
 class UpdateStatusLeaveRequestSerializer(BaseModelSerializer):
+    staff = DetailRelatedField(Staff, representation="get_basic_info", read_only=True)
+
     class Meta:
         model = LeaveRequest
         fields = [
@@ -427,3 +429,8 @@ class UpdateStatusLeaveRequestSerializer(BaseModelSerializer):
             "staff",
             "status",
         ]
+
+    def validate_status(self, value):
+        if LeaveStatusType.PENDING == value:
+            raise serializers.ValidationError("Request is already on pending status")
+        return value

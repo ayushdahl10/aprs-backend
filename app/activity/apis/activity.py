@@ -157,7 +157,7 @@ class AttendanceRequestAPI(SuperViewset):
         queryset = self.get_queryset().filter(
             assigned_to=self.request.user.userdetail.staff
         )
-        if status is not None:
+        if req_status is not None:
             queryset = self.get_queryset().filter(status=req_status)
         if self.is_paginated:
             paginator = self.pagination_class()
@@ -180,6 +180,7 @@ class LeaveRequestAPI(SuperViewset):
     create_serializer = LeaveRequestCreateSerializer
     list_serializer = LeaveRequestListSerializer
     detail_serializer = LeaveRequestDetailSerializer
+    force_delete = True
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset().filter(
@@ -217,7 +218,30 @@ class LeaveRequestAPI(SuperViewset):
             context={"request": self.request},
         )
         update_status_serializer.is_valid(raise_exception=True)
-        object = update_status_serializer.save()
+        update_status_serializer.save()
         return self.on_api_success_response(
             update_status_serializer.data, status=status.HTTP_200_OK
         )
+
+    @action(methods=["get"], detail=False, url_path="check-request")
+    def check_staff_request(self, request, *args, **kwargs):
+        req_status = self.request.GET.get("status", None)
+        queryset = self.get_queryset().filter(
+            assigned_to=self.request.user.userdetail.staff
+        )
+        if req_status is not None:
+            queryset = self.get_queryset().filter(status=req_status)
+        if self.is_paginated:
+            paginator = self.pagination_class()
+            paginated_queryset = paginator.paginate_queryset(
+                queryset, request, view=self
+            )
+            serializer = LeaveRequestListSerializer(paginated_queryset, many=True)
+            page_data, record_data = paginator.get_paginated_response(serializer.data)
+            return self.on_api_success_pagination(
+                page_data=page_data,
+                records_data=record_data,
+                status=status.HTTP_200_OK,
+            )
+        serializer = LeaveRequestListSerializer(queryset, many=True)
+        return self.on_api_success_response(serializer.data, status=200)
