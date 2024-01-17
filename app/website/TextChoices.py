@@ -7,3 +7,10 @@ class DeliverChoices(models.TextChoices):
     STARTED = "started", _("Started")
     COMPLETE = "complete", _("Complete")
     CANCEL = "cancel", _("Cancel")
+
+
+class LicenseStatus(models.TextChoices):
+    INACTIVE = "in_active", _("In Active")
+    ACTIVE = "active", _("Active")
+    EXPIRED = "expired", _("Expired")
+    REVOKED = "revoked", _("Revoked")

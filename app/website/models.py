@@ -5,8 +5,10 @@ from helpers.mixins.constant import (
     WEBSITE_IID_COMPANY_DETAIL,
     WEBSITE_IID_DEPARTMENT,
     WEBSITE_IID_TERMINAL,
+    WEBSITE_IID_LICENSE,
 )
 from helpers.models.base_model import BaseModel
+from website.TextChoices import LicenseStatus
 
 
 # Create your models here.
@@ -84,3 +86,17 @@ class Terminal(BaseModel):
 
     def __str__(self):
         return f"{self.name}=>{self.terminal_ip}"
+
+
+class License(BaseModel):
+    IID_PREFIX_KEY = WEBSITE_IID_LICENSE
+    license_key = models.CharField(unique=True, max_length=256, null=False, blank=False)
+    start_date = models.DateField(null=False)
+    end_date = models.DateField(null=False)
+    grace_period = models.IntegerField(null=False, default=2, blank=True)
+    status = models.CharField(
+        choices=LicenseStatus.choices, default=LicenseStatus.INACTIVE, null=False
+    )
+
+    def __str__(self):
+        return f"{self.license_key}"

@@ -112,6 +112,7 @@ JAZZMIN_SETTINGS = {
         "autho.AttendanceRequest": "fa fa-check",
         "autho.LeaveRequest": "fa fa-plane",
         "website.Terminal": "fa fa-calculator",
+        "website.License": "fa fa-certificate",
     },
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
