@@ -180,6 +180,7 @@ class LeaveRequestAPI(SuperViewset):
     create_serializer = LeaveRequestCreateSerializer
     list_serializer = LeaveRequestListSerializer
     detail_serializer = LeaveRequestDetailSerializer
+    force_delete = True
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset().filter(
