@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from helpers.models.baseadmin_model import AdminBaseModel
-from website.models import Company, Config, Department, Terminal
+from website.models import Company, Config, Department, Terminal, License
 
 
 @admin.register(Company)
@@ -27,3 +27,8 @@ class DepartmentAdmin(AdminBaseModel):
 @admin.register(Terminal)
 class TerminalAdmin(AdminBaseModel):
     list_display = ["iid", "name", "terminal_ip"]
+
+
+@admin.register(License)
+class LicenseAdmin(AdminBaseModel):
+    list_display = ["iid", "license_key", "start_date", "end_date", "status"]
