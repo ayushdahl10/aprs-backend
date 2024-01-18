@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, Count
 from rest_framework import status
 from rest_framework.decorators import action
 
@@ -23,6 +23,7 @@ from autho.models import Attendance, Staff, AttendanceRequest, LeaveRequest
 from helpers.exceptions import NotFoundException
 from helpers.readony_viewset import ReadOnlyViewSet
 from helpers.super_viewset import SuperViewset
+from permissions.models import AttendanceRoleAccess
 
 
 class AttendanceAPI(ReadOnlyViewSet):
@@ -154,11 +155,19 @@ class AttendanceRequestAPI(SuperViewset):
     @action(methods=["get"], detail=False, url_path="staff-request")
     def get_staff_pending_request(self, request, *args, **kwargs):
         req_status = self.request.GET.get("status", None)
-        queryset = self.get_queryset().filter(
-            assigned_to=self.request.user.userdetail.staff
+        user = self.request.user
+        groups = user.groups.all().values_list("name", flat=True)
+        role_access = AttendanceRoleAccess.objects.filter(role__name__in=groups)
+        department = role_access.values_list("department__iid", flat=True)
+        queryset = (
+            self.get_queryset()
+            .filter(staff__department__iid__in=department)
+            .exclude(staff=user.userdetail.staff)
+            .annotate(request=Count("iid"))
         )
-        if req_status is not None:
-            queryset = self.get_queryset().filter(status=req_status)
+        print(queryset)
+        if req_status is not None and queryset.exists():
+            queryset = queryset.filter(status=req_status)
         if self.is_paginated:
             paginator = self.pagination_class()
             paginated_queryset = paginator.paginate_queryset(
@@ -226,8 +235,15 @@ class LeaveRequestAPI(SuperViewset):
     @action(methods=["get"], detail=False, url_path="check-request")
     def check_staff_request(self, request, *args, **kwargs):
         req_status = self.request.GET.get("status", None)
-        queryset = self.get_queryset().filter(
-            assigned_to=self.request.user.userdetail.staff
+        user = self.request.user
+        groups = user.groups.all().values_list("name", flat=True)
+        role_access = AttendanceRoleAccess.objects.filter(role__name__in=groups)
+        department = role_access.values_list("department__iid", flat=True)
+        queryset = (
+            self.get_queryset()
+            .filter(staff__department__iid__in=department)
+            .exclude(staff=user.userdetail.staff)
+            .annotate(request=Count("iid"))
         )
         if req_status is not None:
             queryset = self.get_queryset().filter(status=req_status)

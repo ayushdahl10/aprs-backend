@@ -1,6 +1,6 @@
 from django.db import models
 
-from datetime import date
+from helpers.models.base_model import BaseModel
 
 
 class Type(models.TextChoices):
@@ -25,7 +25,15 @@ class Permission(models.Model):
 class Role(models.Model):
     name = models.CharField(max_length=125, null=False, blank=True, unique=True)
     description = models.TextField(max_length=300, null=True)
-    permissions = models.ManyToManyField(Permission,null=True,blank=True)
+    permissions = models.ManyToManyField(Permission, null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.name}"
+
+
+class AttendanceRoleAccess(BaseModel):
+    IID_PREFIX_KEY = "ars"
+    role = models.OneToOneField(
+        "permissions.Role", null=False, on_delete=models.CASCADE
+    )
+    department = models.ManyToManyField("website.Department", null=True)
