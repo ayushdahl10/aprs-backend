@@ -7,6 +7,7 @@ SUPER_ADMIN = "SuperAdmin"
 STAFF_ADMIN = "StaffAdmin"
 STAFF = "Staff"
 
+
 PRIMARY_ROLES = [
     SUPER_USER,
     REGISTER_USER,

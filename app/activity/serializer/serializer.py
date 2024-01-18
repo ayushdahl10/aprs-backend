@@ -260,9 +260,11 @@ class AttendanceRequestCreateSerializer(BaseModelSerializer):
         validated_data["staff"] = user.userdetail.staff
         validated_data["status"] = AttendanceStatusType.PENDING
         attendance_request_instance = super().create(validated_data)
+
         attendance_request_instance.assigned_to.set(
             self.context.get("request").user.userdetail.staff.supervisor.all()
         )
+
         return attendance_request_instance
 
 

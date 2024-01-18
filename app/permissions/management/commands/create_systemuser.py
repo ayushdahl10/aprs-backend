@@ -1,5 +1,6 @@
-from django.core.management import BaseCommand
 from django.contrib.auth import get_user_model
+from django.core.management import BaseCommand
+
 from helpers.mixins.helper import generate_random_string
 
 
