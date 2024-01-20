@@ -44,10 +44,9 @@ REST_FRAMEWORK = {
 }
 INSTALLED_APPS = [
     "chat",
-    "activity",
+    "license",
     "django_json_widget",
     "payment",
-    "property",
     "coreapi",
     "daphne",
     "jazzmin",

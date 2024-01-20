@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework import routers
 
-from autho.apis import RegisterAPI, LoginAPI, UserDetailAPI, ValidateTokenAPI, StaffAPI
+from autho.apis import RegisterAPI, LoginAPI, UserDetailAPI, ValidateTokenAPI
 
 router = routers.DefaultRouter()
 
@@ -12,7 +12,6 @@ urlpatterns = [
     path("web/me/", ValidateTokenAPI.as_view(), name="validatetoken"),
 ]
 
-router.register("web/staff", StaffAPI, basename="staffs")
 
 urlpatterns += router.urls
 

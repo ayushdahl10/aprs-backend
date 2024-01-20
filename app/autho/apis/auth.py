@@ -39,7 +39,7 @@ class RegisterAPI(generics.CreateAPIView):
                 user = User.objects.get(email=email)
                 return Response({"message": ["Email already exists"], "status": 404})
             except User.DoesNotExist:
-                group = Group.objects.get(name=WEBSITE_GROUP_NAME)
+                group = Group.objects.get(name="Client")
                 user = User.objects.create(
                     username=generate_random_string(12),
                     email=email,
@@ -54,7 +54,7 @@ class RegisterAPI(generics.CreateAPIView):
                     "user": user,
                     "number": number,
                     "is_email_verified": False,
-                    "is_verified": True,
+                    "is_verified": False,
                 }
                 UserDetail.objects._save(**fields)
             return Response(

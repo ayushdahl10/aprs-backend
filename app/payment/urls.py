@@ -3,17 +3,14 @@ from django.conf.urls.static import static
 from django.urls import path
 from rest_framework import routers
 
-from website.apis import CompanyAPI
-from website.views import generate_pdf
+from payment.api import PayAPI
+
+urlpatterns = []
 
 router = routers.DefaultRouter()
 
-router.register(r"web/company", CompanyAPI, basename="companies")
+router.register(r"web/payment", PayAPI, basename="payment-method")
 
-urlpatterns = [
-    path("generate-pdf/", generate_pdf, name="generate_pdf"),
-    # other URL patterns...
-]
 
 urlpatterns += router.urls + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT

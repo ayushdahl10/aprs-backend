@@ -13,7 +13,7 @@ DEBUG = True
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "webdb",
+        "NAME": "aprsdb",
         "USER": "superuser",
         "PASSWORD": "admin_admin",
         "HOST": "db",

@@ -2,15 +2,15 @@ version: "3.8"
 
 services:
   web:
-    container_name: crms
+    container_name: aprs
     build:
       context: . # Points to the project root
       dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8080
+    command: python manage.py runserver 0.0.0.0:8001
     volumes:
       - ./app/:/usr/src/app/
     ports:
-      - 80:8080
+      - 8001:8001
     env_file:
       - ./.env
     depends_on:
@@ -18,13 +18,13 @@ services:
 
   redis:
     image: redis
-    container_name: crms-redis
+    container_name: aprs-redis
     ports:
-      -  "6380:6379"
+      -  "6381:6381"
 
   db:
     image: postgres:15
-    container_name: website-db
+    container_name: aprs-db
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:

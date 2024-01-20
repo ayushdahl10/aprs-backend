@@ -8,12 +8,11 @@ from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 
 from helpers.mixins.prerequest import RequestHandler
 from permissions.permission import WebPermission
-from website.license_permission import CheckLicenseStatus
 
 
 class APIMixin(RequestHandler):
     authentication_classes = [TokenAuthentication, BasicAuthentication]
-    permission_classes = [WebPermission, CheckLicenseStatus]
+    permission_classes = [WebPermission]
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
 
     def on_api_success_response(self, data, status, message="success", **kwargs):

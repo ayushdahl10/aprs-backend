@@ -23,9 +23,9 @@ from rest_framework.authtoken import views
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Rent Management API",
+        title="APRS API",
         default_version="v1",
-        description="API for Rental Management Application",
+        description="API for APRS Application",
     ),
     public=True,
 )
@@ -34,7 +34,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("autho.urls")),
     path("api/", include("website.urls")),
-    path("api/", include("activity.urls")),
+    path("api/", include("payment.urls")),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("api-token-auth/", views.obtain_auth_token),
     path(

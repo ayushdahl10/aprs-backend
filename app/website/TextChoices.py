@@ -14,3 +14,16 @@ class LicenseStatus(models.TextChoices):
     ACTIVE = "active", _("Active")
     EXPIRED = "expired", _("Expired")
     REVOKED = "revoked", _("Revoked")
+
+
+class LicenseType(models.TextChoices):
+    REGULAR = "regular", _("Regular")
+    STANDARD = "standard", _("Standard")
+    PREMIUM = "premiun", _("Premium")
+
+
+class SubscriptionType(models.TextChoices):
+    MONTHLY = "monthly", _("Monthly")
+    YEARLY = "yearly", _("Yearly")
+    QUARTERLY = "quarterly", _("Quarterly")
+    SEMI_ANNUAL = "semi_annual", _("Semi-Annual")

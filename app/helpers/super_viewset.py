@@ -1,3 +1,4 @@
+from typing import Any
 from django.db import transaction
 from rest_framework import status
 from rest_framework import viewsets, mixins
@@ -50,6 +51,7 @@ class SuperViewset(
     update_serializer = None
     pagination_class = CustomPagination
     force_delete: bool = False
+    disallowed_methods = []
 
     def _get_default_serializer_class(self):
         if self.serializer_class:
@@ -76,6 +78,7 @@ class SuperViewset(
         return self.get_serializer
 
     def list(self, request, *args, **kwargs):
+        self.check_disallowed_method()
         queryset = kwargs.get("queryset", None)
         querysets = self.filter_queryset(
             queryset if queryset is not None else self.get_queryset()
@@ -103,6 +106,7 @@ class SuperViewset(
         return self.on_api_success_response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, *args, **kwargs):
+        self.check_disallowed_method()
         try:
             instance = self.get_queryset().get(iid=kwargs["iid"])
         except Exception:
@@ -118,6 +122,7 @@ class SuperViewset(
         return self.on_api_success_response(serializer.data, status=status.HTTP_200_OK)
 
     def partial_update(self, request, *args, **kwargs):
+        self.check_disallowed_method()
         try:
             instance = self.get_queryset().get(iid=kwargs["iid"])
         except Exception:
@@ -133,6 +138,7 @@ class SuperViewset(
         return self.on_api_success_response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
+        self.check_disallowed_method()
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(
             data=self.request.data, context={"request": request}
@@ -142,6 +148,7 @@ class SuperViewset(
         return self.on_api_success_response(serializer.data, status=201)
 
     def destroy(self, request, *args, **kwargs):
+        self.check_disallowed_method()
         instance = self.get_object()
         if self.force_delete:
             instance.delete(force=True)
@@ -150,3 +157,7 @@ class SuperViewset(
         instance.is_active = False
         instance.save()
         return self.on_api_success_response("Deleted successfully", 200)
+
+    def check_disallowed_method(self):
+        if self.action.lower() in self.disallowed_methods:
+            raise BaseException(f"{self.action.lower()} method is not allowed")

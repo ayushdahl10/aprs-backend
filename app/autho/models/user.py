@@ -10,7 +10,7 @@ class UserDetail(models.Model):
     full_name = models.CharField(max_length=500, null=True, blank=True, default="")
     number = models.CharField(max_length=15, null=False, blank=True)
     address = models.CharField(max_length=126, null=True, blank=True)
-    dob = models.DateField(null=True, help_text="Enter date of birth")
+    dob = models.DateField(null=True, help_text="Enter date of birth", blank=True)
     user_status = models.CharField(
         choices=UserStatusChoices.choices, default=UserStatusChoices.ACTIVE
     )

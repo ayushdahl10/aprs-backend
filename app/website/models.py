@@ -3,12 +3,8 @@ from django.db import models
 from helpers.mixins.constant import (
     WEBSITE_IID_ADVANCE_SETTING,
     WEBSITE_IID_COMPANY_DETAIL,
-    WEBSITE_IID_DEPARTMENT,
-    WEBSITE_IID_TERMINAL,
-    WEBSITE_IID_LICENSE,
 )
 from helpers.models.base_model import BaseModel
-from website.TextChoices import LicenseStatus
 
 
 # Create your models here.
@@ -30,6 +26,7 @@ class Company(BaseModel):
     pan_number = models.CharField(
         max_length=200, null=False, blank=True, help_text="Enter company PAN number"
     )
+    email = models.EmailField(max_length=256, null=False, blank=True)
 
     def __str__(self) -> str:
         return f"{self.company_name}"
@@ -52,51 +49,3 @@ class Config(BaseModel):
 
     class Meta:
         verbose_name = "Config"
-
-
-class Department(BaseModel):
-    IID_PREFIX_KEY = WEBSITE_IID_DEPARTMENT
-    name = models.CharField(
-        max_length=256,
-        null=False,
-        blank=True,
-        unique=True,
-        help_text="Enter your department name",
-    )
-    description = models.TextField(max_length=500, null=True, blank=True)
-    contact_info = models.TextField(max_length=500, null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.name}"
-
-
-class Terminal(BaseModel):
-    IID_PREFIX_KEY = WEBSITE_IID_TERMINAL
-    name = models.CharField(
-        max_length=256,
-        null=False,
-        blank=True,
-    )
-    terminal_ip = models.CharField(
-        max_length=256,
-        null=False,
-        blank=True,
-    )
-    config = models.JSONField(default={}, null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.name}=>{self.terminal_ip}"
-
-
-class License(BaseModel):
-    IID_PREFIX_KEY = WEBSITE_IID_LICENSE
-    license_key = models.CharField(unique=True, max_length=256, null=False, blank=False)
-    start_date = models.DateField(null=False)
-    end_date = models.DateField(null=False)
-    grace_period = models.IntegerField(null=False, default=2, blank=True)
-    status = models.CharField(
-        choices=LicenseStatus.choices, default=LicenseStatus.INACTIVE, null=False
-    )
-
-    def __str__(self):
-        return f"{self.license_key}"

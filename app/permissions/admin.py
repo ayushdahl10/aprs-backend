@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from helpers.models.baseadmin_model import AdminBaseModel
-from permissions.models import Permission, Role, AttendanceRoleAccess
+from permissions.models import Permission, Role
 
 
 # Register your models here.
@@ -15,8 +15,3 @@ class APIPermissionAdmin(admin.ModelAdmin):
 @admin.register(Role)
 class RoleAdmin(admin.ModelAdmin):
     list_display = ("name",)
-
-
-@admin.register(AttendanceRoleAccess)
-class AttendanceRoleAccessAdmin(AdminBaseModel):
-    list_display = ("iid", "role", "is_active")

@@ -3,11 +3,6 @@ from django.contrib import admin
 from autho.models import (
     UserDetail,
     UserActivityLog,
-    Staff,
-    Attendance,
-    StaffActivityLogs,
-    AttendanceRequest,
-    LeaveRequest,
 )
 from helpers.models.baseadmin_model import AdminBaseModel
 
@@ -27,41 +22,3 @@ class UserDetailAdmin(admin.ModelAdmin):
 class UserActivityLogAdmin(admin.ModelAdmin):
     list_display = ["user", "login_count", "created_at"]
     sortable_by = ["login_count"]
-
-
-@admin.register(Staff)
-class StaffAdmin(AdminBaseModel):
-    list_display = ["iid", "staff_id", "user", "is_active"]
-
-
-@admin.register(Attendance)
-class StaffLogsAdmin(AdminBaseModel):
-    list_display = ["iid", "staff", "check_in", "check_out", "status"]
-
-
-@admin.register(StaffActivityLogs)
-class StaffActivityLogAdmin(AdminBaseModel):
-    list_display = ["iid", "staff", "created_at"]
-
-
-@admin.register(AttendanceRequest)
-class AttendanceRequestAdmin(AdminBaseModel):
-    list_display = [
-        "iid",
-        "staff",
-        "reason",
-        "request_type",
-        "status",
-    ]
-
-
-@admin.register(LeaveRequest)
-class AttendanceRequestAdmin(AdminBaseModel):
-    list_display = [
-        "iid",
-        "staff",
-        "reason",
-        "start_date",
-        "end_date",
-        "status",
-    ]

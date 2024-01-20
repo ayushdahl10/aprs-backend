@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from helpers.models.baseadmin_model import AdminBaseModel
-from website.models import Company, Config, Department, Terminal, License
+from website.models import Company, Config
 
 
 @admin.register(Company)
@@ -17,18 +17,3 @@ class CompanyDetailAdmin(AdminBaseModel):
 @admin.register(Config)
 class AdvanceSettingAdmin(AdminBaseModel):
     list_display = ["key", "value", "config", "is_active", "created_by"]
-
-
-@admin.register(Department)
-class DepartmentAdmin(AdminBaseModel):
-    list_display = ["iid", "name", "description", "is_active"]
-
-
-@admin.register(Terminal)
-class TerminalAdmin(AdminBaseModel):
-    list_display = ["iid", "name", "terminal_ip"]
-
-
-@admin.register(License)
-class LicenseAdmin(AdminBaseModel):
-    list_display = ["iid", "license_key", "start_date", "end_date", "status"]

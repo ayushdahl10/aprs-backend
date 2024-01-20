@@ -29,11 +29,3 @@ class Role(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name}"
-
-
-class AttendanceRoleAccess(BaseModel):
-    IID_PREFIX_KEY = "ars"
-    role = models.OneToOneField(
-        "permissions.Role", null=False, on_delete=models.CASCADE
-    )
-    department = models.ManyToManyField("website.Department", null=True)

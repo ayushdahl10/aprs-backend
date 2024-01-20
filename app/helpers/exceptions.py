@@ -55,3 +55,16 @@ class RequiredException(BaseException):
         self.message = {"message": message}
         self.error_key = error_key
         self.status_code = status_code
+
+
+class InvalidOperationException(BaseException):
+    def __init__(
+        self,
+        message="Invalid opeartion",
+        error_key="error",
+        status_code=status.HTTP_400_BAD_REQUEST,
+    ):
+        super().__init__(message, error_key, status_code)
+        self.message = {"message": message}
+        self.error_key = error_key
+        self.status_code = status_code
