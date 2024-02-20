@@ -43,6 +43,8 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "helpers.errors.custom_exception_handler",
 }
 INSTALLED_APPS = [
+    "manager",
+    "template",
     "chat",
     "license",
     "django_json_widget",

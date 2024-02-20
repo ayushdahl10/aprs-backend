@@ -1,0 +1,117 @@
+{% comment %} <!-- Container -->
+<div class="container my-2">
+    <!-- Row -->
+    <div class="row">
+        <!-- Column for image -->
+        <div class="col-md-6">
+            <!-- Image -->
+            <img src="your-image-source.jpg" class="img-fluid" alt="Image description" height="300px">
+        </div>
+                <!-- Column for registration form -->
+                <div class="col-md-6">
+                    <!-- Registration form -->
+                    <div class="card">
+                        <div class="card-header">
+                            Sign in
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="email">Email address</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pwd">Password</label>
+                                    <input type="password" class="form-control" id="pwd" placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cpwd">Confirm Password</label>
+                                    <input type="password" class="form-control" id="cpwd" placeholder="Confirm Password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="fname">First Name</label>
+                                    <input type="text" class="form-control" id="fname" placeholder="First Name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lname">Last Name</label>
+                                    <input type="text" class="form-control" id="lname" placeholder="Last Name">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Register</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+    </div>
+</div> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <!-- Required meta tags -->
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+
+ <!-- Bootstrap CSS -->
+ <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+ <title>Esewa Payment Form</title>
+</head>
+<body>
+ <div class="container">
+    <h1 class="mt-5">Esewa Payment Form</h1>
+    <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
+      <div class="form-group">
+        <label for="amount">Amount</label>
+        <input type="text" class="form-control" id="amount" name="amount" value="10000" required>
+      </div>
+      <div class="form-group">
+        <label for="tax_amount">Tax Amount</label>
+        <input type="text" class="form-control" id="tax_amount" name="tax_amount" value="0" required>
+      </div>
+      <div class="form-group">
+        <label for="total_amount">Total Amount</label>
+        <input type="text" class="form-control" id="total_amount" name="total_amount" value="10000" required>
+      </div>
+      <div class="form-group">
+        <label for="transaction_uuid">Transaction UUID</label>
+        <input type="text" class="form-control" id="transaction_uuid" name="transaction_uuid" value="11-201-13999" required>
+      </div>
+      <div class="form-group">
+        <label for="product_code">Product Code</label>
+        <input type="text" class="form-control" id="product_code" name="product_code" value="EPAYTEST" required>
+      </div>
+      <div class="form-group">
+        <label for="product_service_charge">Product Service Charge</label>
+        <input type="text" class="form-control" id="product_service_charge" name="product_service_charge" value="0" required>
+      </div>
+      <div class="form-group">
+        <label for="product_delivery_charge">Product Delivery Charge</label>
+        <input type="text" class="form-control" id="product_delivery_charge" name="product_delivery_charge" value="0" required>
+      </div>
+      <div class="form-group">
+        <label for="success_url">Success URL</label>
+        <input type="text" class="form-control" id="success_url" name="success_url" value="https://esewa.com.np" required>
+      </div>
+      <div class="form-group">
+        <label for="failure_url">Failure URL</label>
+        <input type="text" class="form-control" id="failure_url" name="failure_url" value="https://google.com" required>
+      </div>
+      <div class="form-group">
+        <label for="signed_field_names">Signed Field Names</label>
+        <input type="text" class="form-control" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code" required>
+      </div>
+      <div class="form-group">
+        <label for="signature">Signature</label>
+        <input type="text" class="form-control" id="signature" name="signature" value="H8otkzXrX5ZvNC4t2SMjdiPCi65dCbtmo5ny5NcdhiA=" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+ </div>
+
+ <!-- Optional JavaScript -->
+ <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+ <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

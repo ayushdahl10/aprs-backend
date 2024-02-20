@@ -2,7 +2,11 @@ from django.core.management import BaseCommand
 from django.db import transaction
 
 from permissions.constant import ADMIN_USER, SUPER_ADMIN, CLIENT
-from permissions.managepermission.users_permissions import COMPANY_API, PAYMENT_API
+from permissions.managepermission.users_permissions import (
+    COMPANY_API,
+    PAYMENT_API,
+    MY_LICENSE_API,
+)
 from permissions.models import Role, Permission
 
 
@@ -28,7 +32,7 @@ class Command(BaseCommand):
             )
             update_user_roles(
                 CLIENT,
-                [PAYMENT_API],
+                [PAYMENT_API, MY_LICENSE_API],
             )
         print(f"role permissions updated successfully")
 

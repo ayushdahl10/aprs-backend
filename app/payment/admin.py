@@ -8,6 +8,7 @@ from payment.models import PaymentMethod, PaymentLog, TransactionLog
 @admin.register(PaymentMethod)
 class PaymentMethodAdmin(AdminBaseModel):
     list_display = [
+        "iid",
         "name",
         "is_active",
         "enable_sandbox",
@@ -31,5 +32,21 @@ class TransactionLogAdmin(AdminBaseModel):
         "iid",
         "transaction_code",
         "amount",
+        "subscription_date",
         "expire_at",
+    ]
+    readonly_fields = [
+        "iid",
+        "subscription_date",
+        "transaction_code",
+        "amount",
+        "created_by",
+        "license",
+        "payment_method",
+        "status",
+        "expire_at",
+        "updated_by",
+        "lookup_id",
+        "created_at",
+        "response",
     ]

@@ -2,7 +2,7 @@ from django.db import models
 from helpers.models.base_model import BaseModel
 from helpers.mixins.constant import WEBSITE_IID_PAYMENT_METHOD, WEBSITE_IID_PAYMENT_LOGS
 from payment.constant import PaymentStatus
-from website.TextChoices import SubscriptionType
+from website.TextChoices import BillingType
 
 
 # Create your models here.
@@ -23,10 +23,12 @@ class PaymentMethod(BaseModel):
 class PaymentLog(BaseModel):
     IID_PREFIX_KEY = WEBSITE_IID_PAYMENT_LOGS
     transaction = models.ForeignKey(
-        "payment.TransactionLog", on_delete=models.PROTECT, null=True
+        "payment.TransactionLog",
+        on_delete=models.PROTECT,
+        null=True,
     )
     subscription_type = models.CharField(
-        choices=SubscriptionType.choices, null=False, default=SubscriptionType.MONTHLY
+        choices=BillingType.choices, null=False, default=BillingType.MONTHLY
     )
     payment_datetime = models.DateTimeField(null=True)
 

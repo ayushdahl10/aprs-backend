@@ -32,9 +32,11 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("view/", include("template.urls")),
     path("api/", include("autho.urls")),
     path("api/", include("website.urls")),
     path("api/", include("payment.urls")),
+    path("api/", include("license.urls")),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("api-token-auth/", views.obtain_auth_token),
     path(

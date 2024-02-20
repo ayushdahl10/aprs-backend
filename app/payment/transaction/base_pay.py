@@ -18,7 +18,7 @@ class Transaction(ABC):
         pass
 
     @abstractmethod
-    def payment_initiate(self, payment_method, payment_data, *args, **kwargs):
+    def payment_initiate(self, payment_method, *args, **kwargs):
         pass
 
     @abstractmethod

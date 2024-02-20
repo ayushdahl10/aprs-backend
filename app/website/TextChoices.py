@@ -22,7 +22,7 @@ class LicenseType(models.TextChoices):
     PREMIUM = "premiun", _("Premium")
 
 
-class SubscriptionType(models.TextChoices):
+class BillingType(models.TextChoices):
     MONTHLY = "monthly", _("Monthly")
     YEARLY = "yearly", _("Yearly")
     QUARTERLY = "quarterly", _("Quarterly")

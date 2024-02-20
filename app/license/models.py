@@ -5,8 +5,28 @@ from helpers.mixins.constant import (
     WEBSITE_IID_CLIENT,
 )
 from helpers.models.base_model import BaseModel
-from website.TextChoices import LicenseStatus, LicenseType, SubscriptionType
+from website.TextChoices import LicenseStatus, LicenseType, BillingType
 from helpers.mixins.helper import generate_random_string
+
+
+class Subscription(BaseModel):
+    name = models.CharField(max_length=100, unique=True, null=False, blank=True)
+    description = models.TextField(null=True, blank=True)
+    price = models.DecimalField(decimal_places=2, max_digits=15, default=0.0)
+    billing_type = models.CharField(
+        choices=BillingType.choices, default=BillingType.MONTHLY
+    )
+
+    def __str__(self) -> str:
+        return f"{self.name}=>{self.billing_type}"
+
+    def get_basic_info(self):
+        return {
+            "iid": self.iid,
+            "name": self.name,
+            "price": self.price,
+            "billing_type": self.billing_type.capitalize(),
+        }
 
 
 class Client(BaseModel):
@@ -33,6 +53,9 @@ class Client(BaseModel):
 class License(BaseModel):
     IID_PREFIX_KEY = WEBSITE_IID_LICENSE
     client = models.OneToOneField("license.Client", on_delete=models.PROTECT, null=True)
+    subscription = models.ForeignKey(
+        "license.Subscription", on_delete=models.PROTECT, null=True
+    )
     license_key = models.CharField(
         unique=True,
         max_length=256,
@@ -44,12 +67,6 @@ class License(BaseModel):
     grace_period = models.IntegerField(null=False, default=2, blank=True)
     status = models.CharField(
         choices=LicenseStatus.choices, default=LicenseStatus.INACTIVE, null=False
-    )
-    licenst_type = models.CharField(
-        choices=LicenseType.choices, default=LicenseType.STANDARD
-    )
-    subscription_type = models.CharField(
-        choices=SubscriptionType.choices, default=SubscriptionType.MONTHLY
     )
 
     def __str__(self):

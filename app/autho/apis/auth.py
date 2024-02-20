@@ -70,9 +70,11 @@ class LoginAPI(generics.CreateAPIView, APIMixin):
     queryset = User.objects.all()
     serializer_class = LoginSerializer
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
+        print("hjello")
         if serializer.is_valid():
             validate_data = serializer.validated_data
             return self.on_api_success_response(
